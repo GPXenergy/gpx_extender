@@ -1,0 +1,18 @@
+Part Value         Device        Package        Description
+C1   4u7           C0603-S       0603           capacitor
+C2   4u7           C0603-S       0603           capacitor
+C3   100n          C0603-S       0603           capacitor
+C4   100n          C0603-S       0603           capacitor
+C5   100n          C0603-S       0603           capacitor
+C6   1u            C0603-S       0603           capacitor
+C7   4u7           C0603-S       0603           capacitor
+D1   LED-DUAL      LED-DUAL      LED-1210       bi-color LED
+NRF                PINHD-2X4     2X04           PIN HEADER
+R1   10k           R0603-S       0603           resistor
+R2   2.2k          R0603-S       0603           resistor
+R3   220           R0603-S       0603           resistor
+R4   220           R0603-S       0603           resistor
+RJ11 RJ11-2L-B     RJ11-2L-B     RJ11           6-position RJ11 connector
+SW1  SW-SPST       SW-SPST       TL3330         spst switch
+U1   STM32L011F4PX STM32L011F4PX TSSOP-20       STM32 microcontroller
+U2   AP7370-W5     AP7370-W5     SOT23-5        low-dropout voltage regulator

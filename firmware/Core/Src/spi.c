@@ -23,8 +23,8 @@ void spi1_init(void)
     HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
     
     
-    SPI1->CR1 = 0;  // disable for config
-    SPI1->CR1 = SPI_CR1_BR_1 | SPI_CR1_MSTR | SPI_CR1_SSI | SPI_CR1_SSM; // bi-directional master, clk/16
+    SPI1->CR1 = 0;              // disable for config
+    SPI1->CR1 = SPI_CR1_BR_0 | SPI_CR1_MSTR | SPI_CR1_SSI | SPI_CR1_SSM; // bi-directional master, clk/4 = 8MHz
     SPI1->CR2 = 0;
     SPI1->CR1 |= SPI_CR1_SPE;   // enable SPI
 }
@@ -46,7 +46,6 @@ void spi1_tx(const uint8_t *data, uint16_t length)
         temp_ovr = (volatile uint8_t)SPI1->DR;
         temp_ovr = (volatile uint8_t)SPI1->SR;
     }
-    
 }
 
 void spi1_rx(uint8_t *data, uint16_t length)

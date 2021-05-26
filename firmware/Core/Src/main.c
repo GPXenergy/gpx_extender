@@ -1,7 +1,7 @@
 /* 
     GPX extender prototype based on STM32L011F4
-    
-    ****************INVERTED UART TEST VERSION****************
+        - detects connection to either GPX connector or P1 port
+        - transmits P1 port data to paired extender via NRF24L01+ module
     
     Pin configuration:
 
@@ -14,28 +14,34 @@
     PA6     ------> SPI1_MISO
     PA7     ------> SPI1_MOSI 
     PB1     ------> CE
-    PA9     ------> UART2_TX
-    PA10    ------> UART2_RX
+    PA9     ------> UART2_TX, inverted, pullup enabled (if connected to gpxconn, else gpio input with pullup)
+    PA10    ------> UART2_RX, OD, inverted (if connected to P1 port, else analog input)
     PA13    ------> SWDIO
     PA14    ------> SWCLK
+    PC15    ------> driven high to function as strong pullup if connected to P1 port (2K ohms to UART2_RX)
 
     peripheral overview:
     
+    Systick
+        used for LED blinking and keepalive timeout
+    LPTIM1
+        used for long button press timing, IRQ every 10ms
     TIM2
-        1탎 ticks, IRQ on update, used for delay_us and delay_ms
+        1탎 clock, IRQ on update, used for delay_us and delay_ms
     TIM12
-        1탎 ticks, IRQ on update, used for call_after_us 
+        1탎 clock, IRQ on update, used for call_after_us 
     UART2
-        115200 8N1 only one direction is initialised, RX interrupt based, TX uses DMA channel 4, both pins inverted
+        115200 8N1 only one direction is initialised, RX interrupt based, TX uses DMA channel 4, 
     SPI
-        4MHz full duplex master, for communication with NRF24L01
-        
+        8MHz full duplex master, for communication with NRF24L01
+    
     TODO:   
-        make LED blink more clearly indicate status
-        use nonvolatile memory to save paired address
-        remove remaining HAL functions (used for GPIO and sysclk)
+        replace remaining HAL usage:
+            SystemClock_Config
+            LPM functions and macros
+            GPIO_init
+            RCC macros
 */
-
 
 #include <stdint.h>
 #include <string.h>
@@ -44,75 +50,111 @@
 #include "uart.h"
 #include "spi.h"
 #include "timing.h"
-#include "gpxtendo_nrf.h"
+#include "gpxtend_nrf.h"
 #include "nrf24l01.h"
+#include "crc.h"
+#include "gpio.h"
 
 void SystemClock_Config(void);
 
-void TIM2_IRQHandler(void);
-void TIM21_IRQHandler(void);
 void EXTI0_1_IRQHandler(void);
 void EXTI4_15_IRQHandler(void);
+void TIM2_IRQHandler(void);
+void TIM21_IRQHandler(void);
+void LPTIM1_IRQHandler(void);
+void SysTick_Handler(void);
 
-static void gpxtendo_connectloop(uint8_t *addr);
-static void gpxtendo_txloop(uint8_t *addr);
-static void gpxtendo_rxloop(uint8_t *addr);
+// static functions
+static void unpaired_loop(void);
+static nrf_status pair_loop(void);
+static void tx_loop(uint8_t *addr);
+static void rx_loop(uint8_t *addr);
 static void get_device_uid(uint32_t * uid);
 static void set_device_addr(uint32_t * uid);
+static void write_opposite_addr(uint8_t *addr);
+static uint8_t read_opposite_addr(uint8_t *addr);
 static connection_side detect_conn_side(void);
+
+static void blink_red(uint_fast16_t duration);
+static void blink_green(uint_fast16_t duration);
+static void blink_yellow(uint_fast16_t duration);
+static void pair_success_blink(void);
 
 // globals
 void (*delayed_callback)(void);
 uint8_t device_addr[5] __attribute__((aligned (2))) = {0};
-volatile uint_fast8_t nrf_irq_flag = 0, tim2_flag = 0, button_flag = 0;
+volatile uint_fast8_t nrf_irq_flag = 0, tim2_flag = 0, btn_timer_active = 0;
+static volatile uint_fast8_t pair_btn = 0;
+static volatile uint_fast16_t red_ontime = 0, green_ontime = 0, ms_since_last_tx = 0, pressed_time = 0, released_time = 0;
 connection_side side = UNINITIALISED;
 gpxtendo_uart_data uart2 = {0};
 
 int main(void)
 {
-    uint8_t addr[ADDR_WIDTH];
+    uint8_t opposite_addr[ADDR_WIDTH] = {0};
+    uint_fast8_t saved_addr_valid = 0;
     uint32_t chip_uid[4] = {0};
     
     HAL_Init();
-    // Configure the system clock 
     SystemClock_Config();
-    // disable systick (this breaks the HAL but we're not using that beyond this point)
-    SysTick->CTRL &= ~(SysTick_CTRL_ENABLE_Msk | SysTick_CTRL_TICKINT_Msk);
     
     gpio_init();
     tim21_init();
     tim2_init();
-    spi1_init(); 
+    lptim1_init();
+    spi1_init();
+    crc_init();  
     
-    // NRF24L01 startup delay
-    delay_ms(80);     
     
+    side = detect_conn_side();
     get_device_uid(chip_uid);
     set_device_addr(chip_uid);
-    side = detect_conn_side();
+    saved_addr_valid = read_opposite_addr(opposite_addr);
     
-    if(side == GPX_SIDE){   // for meter side initialise uart later
+    if(side == GPX_SIDE){   // only initialise UART for tx when connected to GPX
         uart2_init_txonly_dma();
         
+        #ifdef DEBUGPRINT
         uart2_putstr_dma("\nGPX extender prototype v" VERSION_STR "\n");
         uart2_putstr_dma("built on " __DATE__ " " __TIME__ "\n");
         printf("chip UID: %08x %08x %08x\n", chip_uid[0], chip_uid[1], chip_uid[2]);
-        printf("device address: %02x %02x %02x %02x %02x\n\n", device_addr[0], device_addr[1], device_addr[2], device_addr[3], device_addr[4]);
-        uart2_putstr_dma("starting as rx side\n");
+        printf("device address: %02x %02x %02x %02x %02x (crc=%02x)\n", device_addr[0], device_addr[1], device_addr[2], device_addr[3], device_addr[4], calc_crc(device_addr, ADDR_WIDTH));
+        printf("paired address: %02x %02x %02x %02x %02x\n\n", opposite_addr[0], opposite_addr[1], opposite_addr[2], opposite_addr[3], opposite_addr[4]);
+        
+        uart2_putstr_dma("radio rx --> serial tx\n");
+        #endif //DEBUGPRINT
     }
-    nrf_init(device_addr);
     
-    // loop until connection established
-    gpxtendo_connectloop(addr); 
-    
-    if(side == METER_SIDE){
-        uart2_init_rxonly();        // start receiving after NRF is initialised or meter side
-        gpxtendo_txloop(addr);
+    // NRF24L01 startup delay
+    delay_ms(80);   
+    if(saved_addr_valid){
+        nrf_init(device_addr, opposite_addr);
     }
     else{
-        printf("connection established with: %x\n", addr[0]);
-        gpxtendo_rxloop(addr);
+        nrf_init(device_addr, ANNOUNCE_ADDR);
     }
+    
+    
+    while(1){
+        if(!saved_addr_valid){
+            unpaired_loop();
+        }
+        else{
+            if(side == METER_SIDE){
+                tx_loop(opposite_addr);
+            }
+            else{
+                rx_loop(opposite_addr);
+            }
+        }
+        if(pair_btn){
+            pair_btn = 0;
+            if(pair_loop() == NRF_SUCCESS){
+                saved_addr_valid = read_opposite_addr(opposite_addr);
+            }
+        }
+    }
+    
 }
 
 static void get_device_uid(uint32_t * uid)
@@ -124,10 +166,10 @@ static void get_device_uid(uint32_t * uid)
 
 static void set_device_addr(uint32_t * uid)
 {
-    device_addr[0] = uid[0] >> 24;
+    device_addr[0] = uid[0] >> 24;      // first byte of address is wafer number 
     
-    uint32_t temp = __REV(uid[2]);
-    memcpy(&device_addr[1], &temp, 4);
+    uint32_t temp = __REV(uid[2]);      // reverse byte order of unique ID bits
+    memcpy(&device_addr[1], &temp, 4);  
 }
 
 static connection_side detect_conn_side()
@@ -135,119 +177,323 @@ static connection_side detect_conn_side()
     // PA9      ------> USART2_TX
     // PA10     ------> USART2_RX
     
-    // input with one pulldown
+    // set both pins to input with pulldown on PA9
     GPIOA->PUPDR &= ~(GPIO_PUPDR_PUPD9 | GPIO_PUPDR_PUPD10);
     GPIOA->PUPDR |= GPIO_PUPDR_PUPD9_1;
     GPIOA->MODER &= ~(GPIO_MODER_MODE9 | GPIO_MODER_MODE10);
     
     delay_ms(1);   // don't read directly after changing pin setting
     
-    if(HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_10)){//GPIOA->IDR & GPIO_IDR_ID10){
-        HAL_GPIO_WritePin(LED2_PORT, LED2_PIN, GPIO_PIN_RESET);
-        return GPX_SIDE;    // pullup present means we're connected to the GPX
+    if(gpio_read(GPIOA, GPIO_PIN_10)){
+        return GPX_SIDE;    // external pullup present means we're connected to the GPX connector
     }
     else{
         return METER_SIDE;  
     }
 }
 
-static void gpxtendo_connectloop(uint8_t *addr)
+// idle loop with blinking to indicate unpaired state
+static void unpaired_loop(void)
 {
+    red_led_off();
+    green_led_off();
+    
+    while(!pair_btn){
+        blink_red(10);
+        delay_ms(1500);
+    }
+    red_ontime = 0;
+    red_led_off();
+}
+
+// pair with another module and save address
+static nrf_status pair_loop(void)
+{
+    uint8_t addr[ADDR_WIDTH] = {0};
     uint8_t pipe, pwidth, rxdata[RAW_PACKET_SIZE];
     nrf_status result = NRF_FAIL;
-    uint16_t timeout;
+    uint16_t timeout = 1, timeout_ms = 0;
     uint8_t i = 0;
+    
+    nrf24_set_txaddr_aa(ANNOUNCE_ADDR);
     
     while(result != NRF_SUCCESS){
         rxdata[0] = 0;
         if(i++ >= 5){
             i = 0;
-            user_led_on();
-            delay_ms(1);
-            user_led_off();
+            blink_yellow(10);
         }
-        if(nrf_announce() == NRF_SUCCESS){
+        if(nrf_pair(side) == NRF_SUCCESS){
             result = nrf_get_announce_response(addr);
             if((result == NRF_SUCCESS) && (side == GPX_SIDE)){
+                #ifdef DEBUGPRINT
                 printf("got announce response from: %x\n", addr[0]);
+                #endif
             }
         }
         else{
+            timeout_ms += timeout / 1000;
             timeout = 65000;
-            result = nrf_receive(rxdata, &pwidth, &pipe, &timeout);
-            if((result == NRF_SUCCESS) && (rxdata[0] == ANNOUNCE)){
-                result = nrf_send_announce_response(&rxdata[1]);
-                memcpy(addr, &rxdata[1], ADDR_WIDTH);
-                if((result == NRF_SUCCESS) && (side == GPX_SIDE)){
-                    printf("sent announce response to: %x\n", addr[0]);
+            if(nrf_receive(rxdata, &pwidth, &pipe, &timeout) == NRF_SUCCESS){
+                
+                if(((side == METER_SIDE) && (rxdata[0] == PAIR_RX)) ||
+                   ((side == GPX_SIDE)   && (rxdata[0] == PAIR_TX))){
+                       
+                    result = nrf_send_announce_response(&rxdata[1]);
+                    if(result == NRF_SUCCESS){
+                        memcpy(addr, &rxdata[1], ADDR_WIDTH);
+                        if(side == GPX_SIDE){
+                            #ifdef DEBUGPRINT
+                            printf("sent announce response to: %x\n", addr[0]);
+                            #endif
+                        }
+                    }
                 }
             }
             else{
                 result = NRF_FAIL;
             }
         }
+        if(timeout_ms >= PAIRING_TIMEOUT){
+            return NRF_TIMEOUT;
+        }
     }
+    write_opposite_addr(addr);
+    nrf24_set_txaddr_aa(addr);  // set tx and rx p0 address to no longer respond to announce
+    pair_success_blink();
+    return NRF_SUCCESS;
 }
 
-_Noreturn static void gpxtendo_txloop(uint8_t *addr)
+// uart RX --> RF TX loop
+// wake a short time after receiving data (rxtimeout) or when buffer is full
+// transmit RF packet, blink green if ACK received, red if not
+// if no uart data for > KEEPALIVE_TIMEOUT, send keepalive packet
+static void tx_loop(uint8_t *addr)
 {
-    uint8_t txdata[RAW_PACKET_SIZE];
-    nrf_status result;
+    uint8_t txdata[RAW_PACKET_SIZE] = {0};
+    nrf_status result = NRF_FAIL;
     uint16_t timeout = TXLOOP_TIMEOUT;
+    uint32_t cum_timeout = 0;
     
+    uart2_init_rxonly();  
     
-    while(1){
+    while(!pair_btn){
         HAL_PWR_EnableSleepOnExit();
         HAL_PWR_EnterSLEEPMode(PWR_LOWPOWERREGULATOR_ON, PWR_SLEEPENTRY_WFI);
         
+        // rxbuf_full and rx_timeout need to be checked sequentially incase new data arrived while in radio tx
         if(uart2.rxbuf_full){
             uart2.rxbuf_full = 0;
             txdata[0] = DATA_PKT;
             txdata[1] = 0xbb;
-            memcpy(&txdata[2], uart2.rxbuf_txfrom, PACKET_DATA_SIZE);    // copy data to packet buffer
-            user_led_on();
+            memcpy(&txdata[2], uart2.rxbuf_txfrom, PACKET_DATA_SIZE);    
+            
             result = NRF_FAIL;
-            while(result != NRF_SUCCESS){
-                result = nrf_send(addr, txdata, RAW_PACKET_SIZE, timeout);
+            while((result != NRF_SUCCESS) && (cum_timeout < TX_MAX_WAITTIME)){
+                timeout = TXLOOP_TIMEOUT;
+                result = nrf_send(addr, txdata, RAW_PACKET_SIZE, &timeout);
+                cum_timeout += timeout;
             }
-            user_led_off();
+            cum_timeout = 0;
+            if(result == NRF_SUCCESS){
+                ms_since_last_tx = 0;
+                blink_green(5);
+            }
+            else{
+                blink_red(10);
+            }
         }
         if(uart2.rx_timeout){
             uart2.rx_timeout = 0;
             txdata[0] = DATA_PKT;
             txdata[1] = 0xbb;
             memcpy(&txdata[2], uart2.rxbuf_txfrom, uart2.bytesreceived); 
-            user_led_on();
+            
             result = NRF_FAIL;
-            while(result != NRF_SUCCESS){
-                result = nrf_send(addr, txdata, (uint8_t)(uart2.bytesreceived + 2), timeout);
+            while((result != NRF_SUCCESS) && (cum_timeout < TX_MAX_WAITTIME)){
+                timeout = TXLOOP_TIMEOUT;
+                result = nrf_send(addr, txdata, (uint8_t)(uart2.bytesreceived + 2), &timeout);
+                cum_timeout += timeout;
             }
-            user_led_off();
+            cum_timeout = 0;
+            if(result == NRF_SUCCESS){
+                ms_since_last_tx = 0;
+                blink_green(5);
+            }
+            else{
+                blink_red(10);
+            }
         }
-    }
+        if(ms_since_last_tx > KEEPALIVE_TIMEOUT){
+            if(nrf_send_keepalive_packet(addr) == NRF_SUCCESS){
+                if(nrf_get_keepalive_response(addr) == NRF_SUCCESS){    
+                    blink_green(10);
+                }
+                else{
+                    blink_red(10);
+                }
+            }
+            else{
+                blink_red(10);
+            }
+            ms_since_last_tx = 0;
+        }
+    } 
+    uart2_deinit();  
 }
 
-_Noreturn static void gpxtendo_rxloop(uint8_t *addr)
+// RF RX --> uart TX loop
+// on receiving data packet, transmit data over uart via DMA
+// blink green on any valid packet, blink red after no packet for >KEEPALIVE TIMEOUT
+static void rx_loop(uint8_t *addr)
 {
-    (void)addr;
     nrf_status result = NRF_FAIL;
-    uint8_t pipe, pwidth, rxdata[33];
+    uint8_t pipe, pwidth, rxdata[RAW_PACKET_SIZE];
     uint16_t timeout;
+    uint32_t ms_since_last_rx = 0;
     
     
-    while(1){
+    while(!pair_btn){
         timeout = RXLOOP_TIMEOUT;
         result = nrf_receive(rxdata, &pwidth, &pipe, &timeout);
+        ms_since_last_rx += timeout >> 10;  // not exactly ms but close enough
         if(result == NRF_SUCCESS){
             if(rxdata[0] == DATA_PKT){
-                user_led_on();
                 uart2_tx_dma(&rxdata[2], pwidth - 2);
-                user_led_off();
+                ms_since_last_rx = 0;
+                blink_green(10);
             }
+            if(rxdata[0] == KEEPALIVE_PKT){
+                nrf_send_keepalive_packet(addr);
+                ms_since_last_rx = 0;
+                blink_green(10);
+            }
+        }
+        if(ms_since_last_rx > KEEPALIVE_TIMEOUT){
+                blink_red(10);
+                ms_since_last_rx = 0;
         }
     }
 }
 
+static void write_opposite_addr(uint8_t *addr)
+{
+    uint32_t word[2];
+    uint8_t crc = calc_crc(addr, ADDR_WIDTH);
+    word[0] = (uint32_t)(addr[0] | (addr[1] << 8) | (addr[2] << 16) | (addr[3] << 24));
+    word[1] = (uint32_t)(addr[4] | (crc << 8));
+    
+    while(FLASH->SR & FLASH_SR_BSY){    // wait until flash not busy
+        ;
+    }
+    FLASH->PEKEYR = FLASH_PEKEY1;       // unlock flash program/erase by writing to unlock keys
+    FLASH->PEKEYR = FLASH_PEKEY2;
+    
+    *(__IO uint32_t *)DATA_EEPROM_BASE = word[0];   // write word
+    
+    while(FLASH->SR & FLASH_SR_BSY){    // wait for write to complete
+        ;
+    }
+    *(__IO uint32_t *)(DATA_EEPROM_BASE + 4) = word[1];
+    
+    while(FLASH->SR & FLASH_SR_BSY){    
+        ;
+    }
+    FLASH->PECR |= FLASH_PECR_PELOCK;   // lock flash
+}
+
+static uint8_t read_opposite_addr(uint8_t *addr)
+{
+    uint32_t word[2];
+    uint8_t crc = 0;
+    
+    word[0] = *((uint32_t *)DATA_EEPROM_BASE);
+    word[1] = *((uint32_t *)(DATA_EEPROM_BASE + 4));
+    
+    addr[0] = word[0] & 0xff;
+    addr[1] = (word[0] >> 8) & 0xff;
+    addr[2] = (word[0] >> 16)  & 0xff;
+    addr[3] = (word[0] >> 24)  & 0xff;
+    addr[4] = word[1] & 0xff;
+    crc = (word[1] >> 8) & 0xff;
+    
+    if(calc_crc(addr, ADDR_WIDTH) == crc){
+        return 1;
+    }
+    else{
+        return 0;
+    }
+}
+
+void blink_red(uint_fast16_t duration)
+{
+    red_led_on();
+    red_ontime = duration;
+}
+
+void blink_green(uint_fast16_t duration)
+{
+    green_led_on();
+    green_ontime = duration;
+}
+
+void blink_yellow(uint_fast16_t duration)
+{
+    red_led_on();
+    green_led_on();
+    red_ontime = duration;
+    green_ontime = duration;
+}
+
+void pair_success_blink()
+{
+    red_led_off();
+    green_led_off();
+    delay_ms(200);
+    
+    if(side == GPX_SIDE){
+        red_led_on();
+        delay_ms(500);
+        red_led_off();
+        delay_ms(500);
+        red_led_on();
+        green_led_on();
+        delay_ms(500);
+        red_led_off();
+        green_led_off();
+        delay_ms(500);
+        red_led_on();
+        green_led_on();
+        delay_ms(500);
+        red_led_off();
+        green_led_off();
+        delay_ms(500);
+        green_led_on();
+        delay_ms(1000);
+        green_led_off();
+    }
+    else{
+        green_led_on();
+        delay_ms(500);
+        green_led_off();
+        delay_ms(500);
+        red_led_on();
+        green_led_on();
+        delay_ms(500);
+        red_led_off();
+        green_led_off();
+        delay_ms(500);
+        red_led_on();
+        green_led_on();
+        delay_ms(500);
+        red_led_off();
+        green_led_off();
+        delay_ms(500);
+        green_led_on();
+        delay_ms(1000);
+        green_led_off();
+    }
+}
 
 
 void SystemClock_Config(void)
@@ -287,42 +533,6 @@ void SystemClock_Config(void)
     }
 }
 
-// THIS IS A RESET BUTTON NOW
-void EXTI0_1_IRQHandler(void)
-{
-    if(EXTI->PR & BTN_PIN){
-        EXTI->PR |= BTN_PIN;
-        button_flag = 1;
-        HAL_NVIC_SystemReset();
-    }
-}
-
-void EXTI4_15_IRQHandler(void)
-{
-    if(EXTI->PR & IRQ_PIN){
-        EXTI->PR |= IRQ_PIN;
-        nrf_irq_flag = 1;
-    }
-}
-
-void TIM2_IRQHandler()
-{
-    TIM2->SR = 0;
-    tim2_flag = 1;
-}
-
-void TIM21_IRQHandler()
-{
-    if(TIM21->SR & TIM_SR_UIF){
-        TIM21->SR = 0;
-        TIM21->DIER &= ~TIM_DIER_UIE; 
-        TIM21->CR1 &= ~TIM_CR1_CEN;      // stop counter
-        delayed_callback();
-    }
-}
-
-
-
 void gpio_init()
 {
     GPIO_InitTypeDef GPIO_InitStruct = {0};
@@ -330,6 +540,7 @@ void gpio_init()
     // unused pins: PC14, PC15, leave in reset state, portc clock disabled
     __HAL_RCC_GPIOA_CLK_ENABLE();
     __HAL_RCC_GPIOB_CLK_ENABLE();
+    __HAL_RCC_GPIOC_CLK_ENABLE();
 
     // IRQ: interrupt
     GPIO_InitStruct.Pin = IRQ_PIN;
@@ -374,10 +585,10 @@ void gpio_init()
     
     
     // initial pin states
-    HAL_GPIO_WritePin(CE_PORT, CE_PIN, GPIO_PIN_RESET);
-    HAL_GPIO_WritePin(CS_PORT, CS_PIN, GPIO_PIN_RESET);
-    HAL_GPIO_WritePin(LED1_PORT, LED1_PIN, GPIO_PIN_SET);
-    HAL_GPIO_WritePin(LED2_PORT, LED2_PIN, GPIO_PIN_SET);
+    user_CE_low();
+    user_CS_low();
+    red_led_off();
+    green_led_off();
     
     // enable interrupts for IRQ and button
     HAL_NVIC_SetPriority(EXTI4_15_IRQn, 2, 0);
@@ -386,42 +597,131 @@ void gpio_init()
     HAL_NVIC_EnableIRQ(EXTI0_1_IRQn);
 }
 
-void user_led_on()
+void red_led_on()
 {
-    HAL_GPIO_WritePin(LED1_PORT, LED1_PIN, GPIO_PIN_RESET);
+    LED2_PORT->BRR = LED2_PIN;
 }
-void user_led_off()
+void red_led_off()
 {
-    HAL_GPIO_WritePin(LED1_PORT, LED1_PIN, GPIO_PIN_SET);
+    LED2_PORT->BSRR = LED2_PIN;
+}
+void green_led_on()
+{
+    LED1_PORT->BRR = LED1_PIN;
+}
+void green_led_off()
+{
+    LED1_PORT->BSRR = LED1_PIN;
 }
 void user_CE_hi()
 {
-    HAL_GPIO_WritePin(CE_PORT, CE_PIN, GPIO_PIN_SET);
+    CE_PORT->BSRR = CE_PIN;
 }
 void user_CE_low()
 {
-    HAL_GPIO_WritePin(CE_PORT, CE_PIN, GPIO_PIN_RESET);
+    CE_PORT->BRR = CE_PIN;
 }
 void user_CS_hi()
 {
-    HAL_GPIO_WritePin(CS_PORT, CS_PIN, GPIO_PIN_SET);
+    CS_PORT->BSRR = CS_PIN;
 }
 void user_CS_low()
 {
-    HAL_GPIO_WritePin(CS_PORT, CS_PIN, GPIO_PIN_RESET);
+    CS_PORT->BRR = CS_PIN;
+}
+
+void EXTI0_1_IRQHandler(void)
+{
+    if(EXTI->PR & BTN_PIN){
+        EXTI->PR |= BTN_PIN;
+        if(!btn_timer_active){    // ignore if timer is already started, probably bounce
+            start_btn_timer();
+        }
+    }
+}
+
+void EXTI4_15_IRQHandler(void)
+{
+    if(EXTI->PR & IRQ_PIN){
+        EXTI->PR |= IRQ_PIN;
+        nrf_irq_flag = 1;
+        HAL_PWR_DisableSleepOnExit();
+    }
+}
+
+void TIM2_IRQHandler()
+{
+    if(TIM2->SR & TIM_SR_UIF){
+        TIM2->SR = 0;
+        tim2_flag = 1;
+        HAL_PWR_DisableSleepOnExit();
+    }
+}
+
+void TIM21_IRQHandler()
+{
+    if(TIM21->SR & TIM_SR_UIF){
+        TIM21->SR = 0;
+        TIM21->DIER &= ~TIM_DIER_UIE;
+        TIM21->CR1 &= ~TIM_CR1_CEN;
+        delayed_callback();
+    }
+}
+
+void LPTIM1_IRQHandler()
+{
+    if(LPTIM1->ISR & LPTIM_ISR_ARRM){
+        LPTIM1->ICR |= LPTIM_ICR_ARRMCF;    // this timer has a seperate interrupt clear register
+        
+        if(gpio_read(BTN_PORT, BTN_PIN)){   // note button is pulldown so 0 = pressed
+            released_time++;
+        }
+        else{
+            pressed_time++;
+        }
+        if(pressed_time >= BTN_PRESS_DURATION){
+            stop_btn_timer();
+            pressed_time = 0;
+            released_time = 0;
+            pair_btn = 1;
+            HAL_PWR_DisableSleepOnExit();
+        }
+        if(released_time >= BTN_RELEASE_DURATION){
+            stop_btn_timer();
+            pressed_time = 0;
+            released_time = 0;
+        }
+    }
+}
+
+void SysTick_Handler(void)
+{
+    HAL_IncTick(); 
+    
+    if(red_ontime){
+        red_ontime--;
+        if(red_ontime == 0){
+            red_led_off();
+        }
+    }
+    if(green_ontime){
+        green_ontime--;
+        if(green_ontime == 0){
+            green_led_off();
+        }
+    }
+    ms_since_last_tx++;
+    if(ms_since_last_tx > KEEPALIVE_TIMEOUT){
+            HAL_PWR_DisableSleepOnExit();
+    }
 }
 
 
-/**
-  * @brief  Retargets the C library printf function to the USART.
-  * @param  None
-  * @retval None
-  */
+// retargets the C library printf function to the USART
 PUTCHAR_PROTOTYPE
 {
-    /* Place your implementation of fputc here */
     (void)f;
-    //uart2_tx((uint8_t *)&ch, 1);
+    
     uart2_tx_dma((uint8_t *)&ch, 1);
     return ch;
 }

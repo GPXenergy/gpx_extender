@@ -41,6 +41,7 @@ void nrf24_ce_high(void);
 void nrf24_ce_low(void);
 
 void nrf24_set_txaddr(const uint8_t *addr);
+void nrf24_set_txaddr_aa(const uint8_t *addr);
 void nrf24_set_rxaddr(const uint8_t *addr, uint8_t pipe);
 void nrf24_read_rxaddr(uint8_t *addr, uint8_t pipe);
 void nrf24_disable_pipe(uint8_t pipe);
@@ -51,7 +52,7 @@ void nrf24_flush_rx(void);
 void nrf24_listen(void);
 uint8_t nrf24_rxfifo_hasdata(void);
 uint8_t nrf24_get_pwidth(void);
-void nrf24_read_rxfifo(uint8_t *data, int length);
+void nrf24_read_rxfifo(uint8_t *data, uint16_t length);
 uint8_t nrf24_rx_finish(void);
 
 uint16_t nrf24_txstatus(void);
@@ -59,8 +60,8 @@ uint8_t nrf24_observe_tx(void);
 uint8_t nrf24_data_sent(void);
 void nrf24_setup_tx(void);
 void nrf24_reuse_tx(void);
-void nrf24_tx_start(const uint8_t *data, int length);
-void nrf24_tx_to_addr(const uint8_t *addr, const uint8_t *data, int length);
+void nrf24_tx_start(const uint8_t *data, uint16_t length);
+void nrf24_tx_to_addr(const uint8_t *addr, const uint8_t *data, uint16_t length);
 uint8_t nrf24_tx_finish(void);
 
 #define ADDR_WIDTH 5

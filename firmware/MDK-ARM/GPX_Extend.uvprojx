@@ -7,7 +7,7 @@
 
   <Targets>
     <Target>
-      <TargetName>GPXtendo_proto</TargetName>
+      <TargetName>GPX_Extend</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
       <pCCUsed>6150000::V6.15::ARMCLANG</pCCUsed>
@@ -48,8 +48,8 @@
             <NotGenerated>0</NotGenerated>
             <InvalidFlash>1</InvalidFlash>
           </TargetStatus>
-          <OutputDirectory>GPXtendo_proto\</OutputDirectory>
-          <OutputName>GPXtendo_proto</OutputName>
+          <OutputDirectory>GPX_Extend\</OutputDirectory>
+          <OutputName>GPX_Extend</OutputName>
           <CreateExecutable>1</CreateExecutable>
           <CreateLib>0</CreateLib>
           <CreateHexFile>1</CreateHexFile>
@@ -137,8 +137,8 @@
             <DriverSelection>4101</DriverSelection>
           </Flash1>
           <bUseTDR>1</bUseTDR>
-          <Flash2>BIN\UL2V8M.DLL</Flash2>
-          <Flash3></Flash3>
+          <Flash2>BIN\UL2CM3.DLL</Flash2>
+          <Flash3>"" ()</Flash3>
           <Flash4></Flash4>
           <pFcarmOut></pFcarmOut>
           <pFcarmGrp></pFcarmGrp>
@@ -336,8 +336,8 @@
             <v6WtE>0</v6WtE>
             <v6Rtti>0</v6Rtti>
             <VariousControls>
-              <MiscControls>-Wno-newline-eof -Wno-date-time -Wno-extra-semi-stmt -Wno-switch-enum -Wno-missing-noreturn</MiscControls>
-              <Define>USE_HAL_DRIVER,STM32L011xx</Define>
+              <MiscControls>-Wno-newline-eof -Wno-date-time -Wno-extra-semi-stmt -Wno-switch-enum -Wno-missing-noreturn -Wno-unused-const-variable </MiscControls>
+              <Define>USE_HAL_DRIVER,STM32L011xx DEBUGPRINT</Define>
               <Undefine></Undefine>
               <IncludePath>../Core/Inc;../Drivers/STM32L0xx_HAL_Driver/Inc;../Drivers/STM32L0xx_HAL_Driver/Inc/Legacy;../Drivers/CMSIS/Device/ST/STM32L0xx/Include;../Drivers/CMSIS/Include</IncludePath>
             </VariousControls>
@@ -414,9 +414,9 @@
               <FilePath>..\Core\Src\uart.c</FilePath>
             </File>
             <File>
-              <FileName>gpxtendo_nrf.c</FileName>
+              <FileName>gpxtend_nrf.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Core\Src\gpxtendo_nrf.c</FilePath>
+              <FilePath>..\Core\Src\gpxtend_nrf.c</FilePath>
             </File>
             <File>
               <FileName>nrf24l01.c</FileName>
@@ -432,6 +432,16 @@
               <FileName>timing.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Core\Src\timing.c</FilePath>
+            </File>
+            <File>
+              <FileName>crc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Core\Src\crc.c</FilePath>
+            </File>
+            <File>
+              <FileName>gpio.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Core\Src\gpio.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -513,7 +523,7 @@
       <component Cclass="CMSIS" Cgroup="CORE" Cvendor="ARM" Cversion="5.4.0" condition="ARMv6_7_8-M Device">
         <package name="CMSIS" schemaVersion="1.3" url="http://www.keil.com/pack/" vendor="ARM" version="5.7.0"/>
         <targetInfos>
-          <targetInfo name="GPXtendo_proto"/>
+          <targetInfo name="GPX_Extend"/>
         </targetInfos>
       </component>
     </components>

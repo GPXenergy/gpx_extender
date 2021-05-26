@@ -14,8 +14,11 @@ void delay_ms(uint16_t delay);
 void wait_for_btn(void);
 void tim2_init(void);
 void tim21_init(void);
+void lptim1_init(void);
+void start_btn_timer(void);
+void stop_btn_timer(void);
 
 extern void (*delayed_callback)(void);
-extern volatile uint_fast8_t nrf_irq_flag, tim2_flag, button_flag;
+extern volatile uint_fast8_t nrf_irq_flag, tim2_flag, btn_timer_active;
 
 #endif  // __TIMING_H

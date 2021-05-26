@@ -5,13 +5,11 @@
 #include "timing.h"
 #include <stdio.h>
 
-
-
 void tim2_init(void)
 {
     __HAL_RCC_TIM2_CLK_ENABLE();
     
-    TIM2->CR1 = 0;              // timer is disabled for config, no other bits for this reg
+    TIM2->CR1 = 0;              // disable timer for config
     TIM2->CR2 = 0;              // don't use TRGO 
     
     TIM2->PSC = 32;             // prescaler
@@ -30,7 +28,7 @@ void tim21_init(void)
 {
     __HAL_RCC_TIM21_CLK_ENABLE();
     
-    TIM21->CR1 = 0;              // timer is disabled for config, no other bits for this reg
+    TIM21->CR1 = 0;              // disable timer for config
     TIM21->CR2 = 0;              // don't use TRGO
     
     TIM21->PSC = 32;             // prescaler
@@ -40,10 +38,44 @@ void tim21_init(void)
   
     TIM21->SR = 0;               // clear UIF
     
-    HAL_NVIC_SetPriority(TIM21_IRQn, 0, 0);
+    HAL_NVIC_SetPriority(TIM21_IRQn, 0, 0); 
     
     // don't actually start the timer yet
 }
+
+void lptim1_init(void)
+{
+    __HAL_RCC_LPTIM1_CLK_ENABLE();
+    
+    
+    LPTIM1->CR = 0; // disable timer
+    
+    LPTIM1->IER = LPTIM_IER_ARRMIE;         // ARR match interrupt enable (similar to UEV)
+    LPTIM1->CFGR = LPTIM_CFGR_PRESC_0 | LPTIM_CFGR_PRESC_2;     // /32 prescaler (1uS clock)
+    
+    LPTIM1->CR |= LPTIM_CR_ENABLE;
+    while(!(LPTIM1->CR &LPTIM_CR_ENABLE));  // timer enables after two counter clocks = 64 clock cycles
+    
+    LPTIM1->ARR = 10000;                    // LPTIM_ARR must be written AFTER the timer is enabled
+    
+    HAL_NVIC_SetPriority(LPTIM1_IRQn, 0, 0);
+
+}
+
+void start_btn_timer(void)
+{
+    btn_timer_active = 1;
+    HAL_NVIC_EnableIRQ(LPTIM1_IRQn);
+    LPTIM1->CR |= LPTIM_CR_CNTSTRT;     // start timer
+}
+
+void stop_btn_timer(void)
+{
+    btn_timer_active = 0;
+    HAL_NVIC_DisableIRQ(LPTIM1_IRQn);
+    LPTIM1->CR &= ~LPTIM_CR_CNTSTRT;    // stop timer
+}
+
 void call_after_us_cancel()
 {
     HAL_NVIC_DisableIRQ(TIM21_IRQn);
@@ -69,6 +101,7 @@ void delay_us(uint16_t delay)
     
     tim2_flag = 0;
     while(!tim2_flag){
+        HAL_PWR_EnableSleepOnExit();
         HAL_PWR_EnterSLEEPMode(PWR_LOWPOWERREGULATOR_ON, PWR_SLEEPENTRY_WFI);
     }
     TIM2->DIER &= ~TIM_DIER_UIE; 
@@ -126,6 +159,7 @@ uint16_t wait_for_IRQ(uint16_t timeout)
     tim2_flag = 0;
     
     while(!(nrf_irq_flag | tim2_flag)){
+        HAL_PWR_EnableSleepOnExit();
         HAL_PWR_EnterSLEEPMode(PWR_LOWPOWERREGULATOR_ON, PWR_SLEEPENTRY_WFI);
     }
     waittime = (volatile uint16_t)TIM2->CNT;
@@ -138,15 +172,7 @@ uint16_t wait_for_IRQ(uint16_t timeout)
         return timeout;
     }
     else{
-        printf("no flag was set?\n");
         return waittime;
     }
 }
 
-void wait_for_btn()
-{
-    button_flag = 0;
-    while(!(button_flag)){
-        HAL_PWR_EnterSLEEPMode(PWR_LOWPOWERREGULATOR_ON, PWR_SLEEPENTRY_WFI);
-    }
-}

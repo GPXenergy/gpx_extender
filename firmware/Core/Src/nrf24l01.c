@@ -7,8 +7,7 @@
 
 static uint8_t nrf24_read_reg(uint8_t reg);
 static uint8_t nrf24_write_reg(uint8_t reg, uint8_t value);
-static void nrf24_write_txfifo(const uint8_t *data, int length);
-static void nrf24_set_txaddr_aa(const uint8_t *addr);
+static void nrf24_write_txfifo(const uint8_t *data, uint16_t length);
 
 static uint8_t last_tx_addr[ADDR_WIDTH] = {0};
 static uint8_t last_p0_addr[ADDR_WIDTH] = {0};
@@ -163,7 +162,7 @@ void nrf24_set_txaddr(const uint8_t *addr)
 * @param  None
 * @retval None
 */
-static void nrf24_set_txaddr_aa(const uint8_t *addr)
+void nrf24_set_txaddr_aa(const uint8_t *addr)
 {
     uint8_t reg_addr;
 
@@ -195,7 +194,7 @@ void nrf24_set_rxaddr(const uint8_t *addr, uint8_t pipe)
 {
     // pipe 0 and 1 use 3-5 byte addr
     if(pipe < 2){
-        uint8_t reg_addr = WRITE_REG | (0x0A + pipe);
+        uint8_t reg_addr = WRITE_REG | (RX_ADDR_P0 + pipe);
         spi.CS_LOW();
         spi.tx(&reg_addr, 1);
         spi.tx(addr, ADDR_WIDTH);
@@ -216,7 +215,7 @@ void nrf24_set_rxaddr(const uint8_t *addr, uint8_t pipe)
 */
 void nrf24_read_rxaddr(uint8_t *addr, uint8_t pipe)
 {
-    uint8_t reg_addr = READ_REG | (0x0A + pipe);
+    uint8_t reg_addr = READ_REG | (RX_ADDR_P0 + pipe);
     spi.CS_LOW();
     spi.tx(&reg_addr, 1);
     spi.rx(addr, ADDR_WIDTH);
@@ -228,7 +227,7 @@ void nrf24_read_rxaddr(uint8_t *addr, uint8_t pipe)
 * @param  None
 * @retval None
 */
-void nrf24_tx_start(const uint8_t *data, int length)
+void nrf24_tx_start(const uint8_t *data, uint16_t length)
 {
     uint8_t cmd = WRITE_TX;
     uint8_t temp_config = nrf24_read_reg(CONFIG);
@@ -273,7 +272,7 @@ void nrf24_setup_tx(void)
 * @param  None
 * @retval None
 */
-static void nrf24_write_txfifo(const uint8_t *data, int length)
+static void nrf24_write_txfifo(const uint8_t *data, uint16_t length)
 {
     uint8_t cmd = WRITE_TX;
     spi.CS_LOW();
@@ -319,7 +318,7 @@ void nrf24_ce_low(void)
 * @param  None
 * @retval None
 */
-void nrf24_tx_to_addr(const uint8_t *addr, const uint8_t *data, int length)
+void nrf24_tx_to_addr(const uint8_t *addr, const uint8_t *data, uint16_t length)
 {
     uint8_t temp_config; // = nrf24_read_reg(CONFIG);
 
@@ -388,14 +387,14 @@ void nrf24_enable_pipe(uint8_t pipe)
 {
     uint8_t tempreg;
     tempreg = nrf24_read_reg(EN_RXADDR);
-    nrf24_write_reg(EN_RXADDR, tempreg | (1 << pipe));
+    nrf24_write_reg(EN_RXADDR, tempreg | (uint8_t)(1 << pipe));
 }
 /**
 * @brief  
 * @param  None
 * @retval None
 */
-void nrf24_read_rxfifo(uint8_t *data, int length)
+void nrf24_read_rxfifo(uint8_t *data, uint16_t length)
 {
     uint8_t cmd = READ_RX;
     spi.CS_LOW();

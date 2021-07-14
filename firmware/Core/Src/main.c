@@ -537,7 +537,7 @@ void gpio_init()
 {
     GPIO_InitTypeDef GPIO_InitStruct = {0};
 
-    // unused pins: PC14, PC15, leave in reset state, portc clock disabled
+    // unused pins: PC14, leave in reset state, portc clock disabled
     __HAL_RCC_GPIOA_CLK_ENABLE();
     __HAL_RCC_GPIOB_CLK_ENABLE();
     __HAL_RCC_GPIOC_CLK_ENABLE();

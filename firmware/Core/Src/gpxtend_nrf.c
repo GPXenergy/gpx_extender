@@ -34,7 +34,7 @@ const static nrf24l01_config nrf_config = {  .config_reg = EN_CRC | CRCO,       
                                              .rx_addr = ERX_ALL,                    // enable RX pipes
                                              .retransmit = ARD(0) | ARC(8),         // auto retransmit delay 250us, retransmit count 8
                                              .rf_channel = 100,                     // 2500MHz channel chosen to avoid wifi interference
-                                             .rf_setup = RF_DR_1M | RF_PWR(3),      // 1M data range, max (0dBm)RF power for max range
+                                             .rf_setup = RF_DR_1M | RF_PWR(1),      // 1M data range, max (0dBm)RF power for max range
                                              .dynamic_payload = DPL_ALL,            // dynamic payload on all pipes
                                              .feature = EN_DPL,                     // enable dynamic payload
                                              .rx_width_p0 = 0,                      // value is ignored when using dynamic payload

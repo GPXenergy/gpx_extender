@@ -29,7 +29,7 @@ typedef enum{
 } connection_side;
 
 
-#define VERSION_STR         "0.6"
+#define VERSION_STR         "0.7"
 
 // additional NRF pins
 #define CS_PORT             GPIOA
@@ -45,7 +45,8 @@ typedef enum{
 #define LED2_PIN            GPIO_PIN_2
 #define BTN_PORT            GPIOA
 #define BTN_PIN             GPIO_PIN_0
-
+#define PULLUP_PIN          GPIO_PIN_14
+#define PULLUP_PORT         GPIOC
 
 #define RAW_PACKET_SIZE     32
 #define PACKET_DATA_SIZE    30

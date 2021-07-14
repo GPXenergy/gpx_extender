@@ -25,12 +25,12 @@ void uart2_init_rxonly(void)
     
     // PC15 connected to data with 2k2 resistor, acts as stronger toggleable pullup
     __HAL_RCC_GPIOC_CLK_ENABLE();
-    GPIO_InitStruct.Pin = GPIO_PIN_15;
+    GPIO_InitStruct.Pin = PULLUP_PIN;
     GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-    HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
-    HAL_GPIO_WritePin(GPIOC, GPIO_PIN_15, GPIO_PIN_SET);
+    HAL_GPIO_Init(PULLUP_PORT, &GPIO_InitStruct);
+    HAL_GPIO_WritePin(PULLUP_PORT, PULLUP_PIN, GPIO_PIN_SET);
     
     GPIO_InitStruct.Pin = GPIO_PIN_10;
     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;

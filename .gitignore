@@ -1,0 +1,16 @@
+# build output
+
+*.d
+*.o
+*.axf
+*.htm
+*.lnp
+*.map
+*.sct
+*.dep
+*.lst
+
+# keil project user specific files
+*.uvguix.*
+*.dbgconf
+

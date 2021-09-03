@@ -8,7 +8,6 @@
 
 #define UART_RXBUF_SIZE     (PACKET_DATA_SIZE * 4)
 #define UART_TXBUF_SIZE     (PACKET_DATA_SIZE * 4)
-#define UART_RX_TIMEOUT     1100   // timeout in us (a little over 1 character at 9600baud)
 
 
 typedef struct{ 

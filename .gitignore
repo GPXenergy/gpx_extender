@@ -13,4 +13,5 @@
 # keil project user specific files
 *.uvguix.*
 *.dbgconf
+firmware/MDK-ARM/RTE
 

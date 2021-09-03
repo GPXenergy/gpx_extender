@@ -1,6 +1,7 @@
 
 #include <stdint.h>
 #include <string.h>
+#include "extender_config.h"
 #include "uart.h"
 #include "timing.h"
 #include "stm32l0xx_hal.h"
@@ -8,8 +9,6 @@
 
 void uart2_init_rxonly(void)
 {
-    const uint32_t baud = 115200;
-    uint16_t uart_div = 1;
     GPIO_InitTypeDef GPIO_InitStruct = {0};
     
     __HAL_RCC_USART2_CLK_ENABLE();
@@ -40,10 +39,10 @@ void uart2_init_rxonly(void)
     HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
     USART2->CR1 = 0;
-    USART2->CR1 = USART_CR1_RE | USART_CR1_RXNEIE;
-    uart_div = (uint16_t)((HAL_RCC_GetPCLK1Freq() + (baud / 2)) / baud);
+    USART2->CR1 = USART_CR1_RE | USART_CR1_RXNEIE | UART_DATABITS | (UART_PARITY << USART_CR1_PS_Pos);
+    uint16_t uart_div = (uint16_t)((HAL_RCC_GetPCLK1Freq() + (BAUDRATE / 2)) / BAUDRATE);
     USART2->BRR  = uart_div;
-    USART2->CR2 = USART_CR2_RXINV;
+    USART2->CR2 = USART_CR2_RXINV | (UART_STOPBITS << USART_CR2_STOP_Pos);
     USART2->CR3 = 0;
     
     NVIC_SetPriority(USART2_IRQn, 0);
@@ -56,8 +55,6 @@ void uart2_init_rxonly(void)
 void uart2_init_txonly_dma(void)
 {
     GPIO_InitTypeDef GPIO_InitStruct = {0};
-    const uint32_t baud = 115200;
-    uint16_t uart_div = 1;
     
     __HAL_RCC_USART2_CLK_ENABLE();
     __HAL_RCC_DMA1_CLK_ENABLE();
@@ -81,8 +78,8 @@ void uart2_init_txonly_dma(void)
     HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
     
     USART2->CR1 = 0;
-    USART2->CR1 = USART_CR1_TE;
-    uart_div = (uint16_t)((HAL_RCC_GetPCLK1Freq() + (baud / 2)) / baud);
+    USART2->CR1 = USART_CR1_TE | UART_DATABITS;
+    uint16_t uart_div = (uint16_t)((HAL_RCC_GetPCLK1Freq() + (BAUDRATE / 2)) / BAUDRATE);
     USART2->BRR  = uart_div;
     USART2->CR2 = USART_CR2_TXINV;
     USART2->CR3 = 0;

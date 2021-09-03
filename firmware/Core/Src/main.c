@@ -31,7 +31,8 @@
     TIM12
         1µs clock, IRQ on update, used for call_after_us 
     UART2
-        115200 8N1 only one direction is initialised, RX interrupt based, TX uses DMA channel 4, 
+        baudrate and stop/databits set in extender_config.h 
+        only one direction is initialised, RX interrupt based, TX uses DMA channel 4
     SPI
         8MHz full duplex master, for communication with NRF24L01
     
@@ -47,11 +48,11 @@
 #include <string.h>
 #include <stdio.h>
 #include "main.h"
+#include "extender_config.h"
 #include "uart.h"
 #include "spi.h"
 #include "timing.h"
 #include "gpxtend_nrf.h"
-#include "nrf24l01.h"
 #include "crc.h"
 #include "gpio.h"
 
@@ -75,9 +76,7 @@ static void write_opposite_addr(uint8_t *addr);
 static uint8_t read_opposite_addr(uint8_t *addr);
 static connection_side detect_conn_side(void);
 
-static void blink_red(uint_fast16_t duration);
-static void blink_green(uint_fast16_t duration);
-static void blink_yellow(uint_fast16_t duration);
+static void blink(led_colour_t colour, uint_fast16_t duration);
 static void pair_success_blink(void);
 
 // globals
@@ -199,8 +198,8 @@ static void unpaired_loop(void)
     green_led_off();
     
     while(!pair_btn){
-        blink_red(10);
-        delay_ms(1500);
+        blink(UNPAIRED_BLINK_COLOUR, UNPAIRED_BLINK_ONTIME);
+        delay_ms(UNPAIRED_BLINK_OFFTIME);
     }
     red_ontime = 0;
     red_led_off();
@@ -212,7 +211,8 @@ static nrf_status pair_loop(void)
     uint8_t addr[ADDR_WIDTH] = {0};
     uint8_t pipe, pwidth, rxdata[RAW_PACKET_SIZE];
     nrf_status result = NRF_FAIL;
-    uint16_t timeout = 1, timeout_ms = 0;
+    uint16_t timeout = 1;
+    uint32_t timeout_ms = 0;
     uint8_t i = 0;
     
     nrf24_set_txaddr_aa(ANNOUNCE_ADDR);
@@ -221,7 +221,7 @@ static nrf_status pair_loop(void)
         rxdata[0] = 0;
         if(i++ >= 5){
             i = 0;
-            blink_yellow(10);
+            blink(PAIRING_BLINK_COLOUR, PAIRING_BLINK_ONTIME);
         }
         if(nrf_pair(side) == NRF_SUCCESS){
             result = nrf_get_announce_response(addr);
@@ -297,10 +297,10 @@ static void tx_loop(uint8_t *addr)
             cum_timeout = 0;
             if(result == NRF_SUCCESS){
                 ms_since_last_tx = 0;
-                blink_green(5);
+                blink(TX_SUCCESS_COLOUR, TX_SUCCESS_ONTIME);
             }
             else{
-                blink_red(10);
+                blink(TX_FAIL_COLOUR, TX_FAIL_ONTIME);
             }
         }
         if(uart2.rx_timeout){
@@ -318,23 +318,23 @@ static void tx_loop(uint8_t *addr)
             cum_timeout = 0;
             if(result == NRF_SUCCESS){
                 ms_since_last_tx = 0;
-                blink_green(5);
+                blink(TX_SUCCESS_COLOUR, TX_SUCCESS_ONTIME);
             }
             else{
-                blink_red(10);
+                blink(TX_FAIL_COLOUR, TX_FAIL_ONTIME);
             }
         }
         if(ms_since_last_tx > KEEPALIVE_TIMEOUT){
             if(nrf_send_keepalive_packet(addr) == NRF_SUCCESS){
                 if(nrf_get_keepalive_response(addr) == NRF_SUCCESS){    
-                    blink_green(10);
+                    blink(TX_SUCCESS_COLOUR, TX_SUCCESS_ONTIME);
                 }
                 else{
-                    blink_red(10);
+                    blink(TX_FAIL_COLOUR, TX_FAIL_ONTIME);
                 }
             }
             else{
-                blink_red(10);
+                blink(TX_FAIL_COLOUR, TX_FAIL_ONTIME);
             }
             ms_since_last_tx = 0;
         }
@@ -361,16 +361,16 @@ static void rx_loop(uint8_t *addr)
             if(rxdata[0] == DATA_PKT){
                 uart2_tx_dma(&rxdata[2], pwidth - 2);
                 ms_since_last_rx = 0;
-                blink_green(10);
+                blink(RX_SUCCESS_COLOUR, RX_SUCCESS_ONTIME);
             }
             if(rxdata[0] == KEEPALIVE_PKT){
                 nrf_send_keepalive_packet(addr);
                 ms_since_last_rx = 0;
-                blink_green(10);
+                blink(RX_SUCCESS_COLOUR, RX_SUCCESS_ONTIME);
             }
         }
         if(ms_since_last_rx > KEEPALIVE_TIMEOUT){
-                blink_red(10);
+                blink(RX_FAIL_COLOUR, RX_FAIL_ONTIME);
                 ms_since_last_rx = 0;
         }
     }
@@ -425,24 +425,29 @@ static uint8_t read_opposite_addr(uint8_t *addr)
     }
 }
 
-void blink_red(uint_fast16_t duration)
+void blink(led_colour_t colour, uint_fast16_t duration)
 {
-    red_led_on();
-    red_ontime = duration;
-}
+    switch(colour)
+    {
+    case RED:{
+        red_led_on();
+        red_ontime = duration;
+        break;
+    }
+    case GREEN:{
+        green_led_on();
+        green_ontime = duration;
+        break;
 
-void blink_green(uint_fast16_t duration)
-{
-    green_led_on();
-    green_ontime = duration;
-}
-
-void blink_yellow(uint_fast16_t duration)
-{
-    red_led_on();
-    green_led_on();
-    red_ontime = duration;
-    green_ontime = duration;
+    }
+    case YELLOW:{
+        red_led_on();
+        green_led_on();
+        red_ontime = duration;
+        green_ontime = duration;
+        break;
+    }
+    }
 }
 
 void pair_success_blink()

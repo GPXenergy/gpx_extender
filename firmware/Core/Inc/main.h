@@ -29,8 +29,6 @@ typedef enum{
 } connection_side;
 
 
-#define VERSION_STR         "0.7"
-
 // additional NRF pins
 #define CS_PORT             GPIOA
 #define CS_PIN              GPIO_PIN_3
@@ -50,13 +48,6 @@ typedef enum{
 
 #define RAW_PACKET_SIZE     32
 #define PACKET_DATA_SIZE    30
-#define TXLOOP_TIMEOUT      30000
-#define RXLOOP_TIMEOUT      (UINT16_MAX - 1)
-#define TX_MAX_WAITTIME     200000
-#define BTN_PRESS_DURATION      300     // time to hold button in 10ms increments
-#define BTN_RELEASE_DURATION    11      // for debounce only count button as released after some time
-#define PAIRING_TIMEOUT         30000   // ms timeout for pairing
-#define KEEPALIVE_TIMEOUT       1000    // send keepalive packet if no RF data has been sent for this amount of time(ms)
 
 #define PUTCHAR_PROTOTYPE int fputc(int ch, FILE *f)
 

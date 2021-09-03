@@ -1,10 +1,9 @@
 
 #include <stdint.h>
+#include "extender_config.h"
 #include "crc.h"
 #include "stm32l0xx_hal.h"
 
-#define CRC8_POLY       0x7
-#define CRC_INITVALUE   0xff
 
 void crc_init(void)
 {

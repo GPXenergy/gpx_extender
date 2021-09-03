@@ -44,6 +44,7 @@ Section Cross References
     main.o(.text.main) refers to memcpya.o(.text) for __aeabi_memcpy
     main.o(.text.main) refers to gpxtend_nrf.o(.text.nrf_send) for nrf_send
     main.o(.text.main) refers to gpxtend_nrf.o(.text.nrf_get_keepalive_response) for nrf_get_keepalive_response
+    main.o(.text.main) refers to uart.o(.text.uart2_deinit) for uart2_deinit
     main.o(.text.main) refers to main.o(.bss.device_addr) for device_addr
     main.o(.text.main) refers to main.o(.bss.side) for side
     main.o(.text.main) refers to main.o(.rodata.str1.1) for .L.str
@@ -53,14 +54,13 @@ Section Cross References
     main.o(.text.main) refers to main.o(.bss.red_ontime) for [Anonymous Symbol]
     main.o(.text.main) refers to main.o(.bss.ms_since_last_tx) for [Anonymous Symbol]
     main.o(.text.main) refers to main.o(.bss.green_ontime) for [Anonymous Symbol]
-    main.o(.text.main) refers to uart.o(.text.uart2_deinit) for uart2_deinit
     main.o(.text.main) refers to gpxtend_nrf.o(.text.nrf_receive) for nrf_receive
     main.o(.text.main) refers to uart.o(.text.uart2_tx_dma) for uart2_tx_dma
     main.o(.text.main) refers to nrf24l01.o(.text.nrf24_set_txaddr_aa) for nrf24_set_txaddr_aa
     main.o(.text.main) refers to gpxtend_nrf.o(.text.nrf_pair) for nrf_pair
     main.o(.text.main) refers to uidiv_div0.o(.text) for __aeabi_uidiv
-    main.o(.text.main) refers to gpxtend_nrf.o(.text.nrf_get_announce_response) for nrf_get_announce_response
     main.o(.text.main) refers to gpxtend_nrf.o(.text.nrf_send_announce_response) for nrf_send_announce_response
+    main.o(.text.main) refers to gpxtend_nrf.o(.text.nrf_get_announce_response) for nrf_get_announce_response
     main.o(.ARM.exidx.text.main) refers to main.o(.text.main) for [Anonymous Symbol]
     main.o(.text.SystemClock_Config) refers to stm32l0xx_hal_rcc.o(.text.HAL_RCC_OscConfig) for HAL_RCC_OscConfig
     main.o(.text.SystemClock_Config) refers to stm32l0xx_hal_rcc.o(.text.HAL_RCC_ClockConfig) for HAL_RCC_ClockConfig
@@ -1315,227 +1315,228 @@ Image Symbol Table
     [Anonymous Symbol]                       0x080004f8   Section        0  stm32l0xx_hal.o(.text.HAL_IncTick)
     __arm_cp.5_1                             0x08000508   Number         4  stm32l0xx_hal.o(.text.HAL_IncTick)
     [Anonymous Symbol]                       0x0800050c   Section        0  stm32l0xx_hal.o(.text.HAL_Init)
-    [Anonymous Symbol]                       0x08000534   Section        0  stm32l0xx_hal.o(.text.HAL_InitTick)
-    __arm_cp.1_0                             0x08000570   Number         4  stm32l0xx_hal.o(.text.HAL_InitTick)
-    [Anonymous Symbol]                       0x08000574   Section        0  stm32l0xx_hal_msp.o(.text.HAL_MspInit)
-    __arm_cp.0_0                             0x08000588   Number         4  stm32l0xx_hal_msp.o(.text.HAL_MspInit)
-    [Anonymous Symbol]                       0x0800058c   Section        0  stm32l0xx_hal_cortex.o(.text.HAL_NVIC_DisableIRQ)
-    __arm_cp.2_0                             0x080005a8   Number         4  stm32l0xx_hal_cortex.o(.text.HAL_NVIC_DisableIRQ)
-    [Anonymous Symbol]                       0x080005ac   Section        0  stm32l0xx_hal_cortex.o(.text.HAL_NVIC_EnableIRQ)
-    __arm_cp.1_0                             0x080005c0   Number         4  stm32l0xx_hal_cortex.o(.text.HAL_NVIC_EnableIRQ)
-    [Anonymous Symbol]                       0x080005c4   Section        0  stm32l0xx_hal_cortex.o(.text.HAL_NVIC_SetPriority)
-    __arm_cp.0_0                             0x080005fc   Number         4  stm32l0xx_hal_cortex.o(.text.HAL_NVIC_SetPriority)
-    __arm_cp.0_1                             0x08000600   Number         4  stm32l0xx_hal_cortex.o(.text.HAL_NVIC_SetPriority)
-    [Anonymous Symbol]                       0x08000604   Section        0  stm32l0xx_hal_pwr.o(.text.HAL_PWR_DisableSleepOnExit)
-    [Anonymous Symbol]                       0x08000610   Section        0  stm32l0xx_hal_pwr.o(.text.HAL_PWR_EnableSleepOnExit)
-    [Anonymous Symbol]                       0x0800061c   Section        0  stm32l0xx_hal_pwr.o(.text.HAL_PWR_EnterSLEEPMode)
-    __arm_cp.8_0                             0x0800066c   Number         4  stm32l0xx_hal_pwr.o(.text.HAL_PWR_EnterSLEEPMode)
-    __arm_cp.8_1                             0x08000670   Number         4  stm32l0xx_hal_pwr.o(.text.HAL_PWR_EnterSLEEPMode)
-    __arm_cp.8_2                             0x08000674   Number         4  stm32l0xx_hal_pwr.o(.text.HAL_PWR_EnterSLEEPMode)
-    [Anonymous Symbol]                       0x08000678   Section        0  stm32l0xx_hal_rcc.o(.text.HAL_RCC_ClockConfig)
-    __arm_cp.3_0                             0x08000878   Number         4  stm32l0xx_hal_rcc.o(.text.HAL_RCC_ClockConfig)
-    __arm_cp.3_1                             0x0800087c   Number         4  stm32l0xx_hal_rcc.o(.text.HAL_RCC_ClockConfig)
-    __arm_cp.3_3                             0x08000880   Number         4  stm32l0xx_hal_rcc.o(.text.HAL_RCC_ClockConfig)
-    __arm_cp.3_4                             0x08000884   Number         4  stm32l0xx_hal_rcc.o(.text.HAL_RCC_ClockConfig)
-    __arm_cp.3_5                             0x08000888   Number         4  stm32l0xx_hal_rcc.o(.text.HAL_RCC_ClockConfig)
-    __arm_cp.3_6                             0x0800088c   Number         4  stm32l0xx_hal_rcc.o(.text.HAL_RCC_ClockConfig)
-    __arm_cp.3_7                             0x08000890   Number         4  stm32l0xx_hal_rcc.o(.text.HAL_RCC_ClockConfig)
-    __arm_cp.3_9                             0x08000894   Number         4  stm32l0xx_hal_rcc.o(.text.HAL_RCC_ClockConfig)
-    [Anonymous Symbol]                       0x08000898   Section        0  stm32l0xx_hal_rcc.o(.text.HAL_RCC_GetPCLK1Freq)
-    __arm_cp.6_0                             0x080008ac   Number         4  stm32l0xx_hal_rcc.o(.text.HAL_RCC_GetPCLK1Freq)
-    __arm_cp.6_1                             0x080008b0   Number         4  stm32l0xx_hal_rcc.o(.text.HAL_RCC_GetPCLK1Freq)
-    __arm_cp.6_2                             0x080008b4   Number         4  stm32l0xx_hal_rcc.o(.text.HAL_RCC_GetPCLK1Freq)
-    [Anonymous Symbol]                       0x080008b8   Section        0  stm32l0xx_hal_rcc.o(.text.HAL_RCC_OscConfig)
-    __arm_cp.1_12                            0x08000a4c   Number         4  stm32l0xx_hal_rcc.o(.text.HAL_RCC_OscConfig)
-    __arm_cp.1_13                            0x08000a50   Number         4  stm32l0xx_hal_rcc.o(.text.HAL_RCC_OscConfig)
-    __arm_cp.1_1                             0x08000da4   Number         4  stm32l0xx_hal_rcc.o(.text.HAL_RCC_OscConfig)
-    __arm_cp.1_2                             0x08000da8   Number         4  stm32l0xx_hal_rcc.o(.text.HAL_RCC_OscConfig)
-    __arm_cp.1_3                             0x08000dac   Number         4  stm32l0xx_hal_rcc.o(.text.HAL_RCC_OscConfig)
-    __arm_cp.1_4                             0x08000db0   Number         4  stm32l0xx_hal_rcc.o(.text.HAL_RCC_OscConfig)
-    __arm_cp.1_5                             0x08000db4   Number         4  stm32l0xx_hal_rcc.o(.text.HAL_RCC_OscConfig)
-    __arm_cp.1_6                             0x08000db8   Number         4  stm32l0xx_hal_rcc.o(.text.HAL_RCC_OscConfig)
-    __arm_cp.1_7                             0x08000dbc   Number         4  stm32l0xx_hal_rcc.o(.text.HAL_RCC_OscConfig)
-    __arm_cp.1_9                             0x08000dc0   Number         4  stm32l0xx_hal_rcc.o(.text.HAL_RCC_OscConfig)
-    [Anonymous Symbol]                       0x08000dc4   Section        0  stm32l0xx_hal_cortex.o(.text.HAL_SYSTICK_Config)
-    __arm_cp.4_0                             0x08000dec   Number         4  stm32l0xx_hal_cortex.o(.text.HAL_SYSTICK_Config)
-    __arm_cp.4_1                             0x08000df0   Number         4  stm32l0xx_hal_cortex.o(.text.HAL_SYSTICK_Config)
-    __arm_cp.4_2                             0x08000df4   Number         4  stm32l0xx_hal_cortex.o(.text.HAL_SYSTICK_Config)
-    [Anonymous Symbol]                       0x08000df8   Section        0  stm32l0xx_it.o(.text.HardFault_Handler)
-    [Anonymous Symbol]                       0x08000dfc   Section        0  main.o(.text.LPTIM1_IRQHandler)
-    __arm_cp.16_0                            0x08000e60   Number         4  main.o(.text.LPTIM1_IRQHandler)
-    __arm_cp.16_1                            0x08000e64   Number         4  main.o(.text.LPTIM1_IRQHandler)
-    __arm_cp.16_2                            0x08000e68   Number         4  main.o(.text.LPTIM1_IRQHandler)
-    __arm_cp.16_3                            0x08000e6c   Number         4  main.o(.text.LPTIM1_IRQHandler)
-    [Anonymous Symbol]                       0x08000e70   Section        0  stm32l0xx_it.o(.text.NMI_Handler)
-    [Anonymous Symbol]                       0x08000e72   Section        0  stm32l0xx_it.o(.text.PendSV_Handler)
-    [Anonymous Symbol]                       0x08000e74   Section        0  stm32l0xx_it.o(.text.SVC_Handler)
-    [Anonymous Symbol]                       0x08000e78   Section        0  main.o(.text.SysTick_Handler)
-    __arm_cp.17_0                            0x08000ec8   Number         4  main.o(.text.SysTick_Handler)
-    __arm_cp.17_1                            0x08000ecc   Number         4  main.o(.text.SysTick_Handler)
-    __arm_cp.17_2                            0x08000ed0   Number         4  main.o(.text.SysTick_Handler)
-    __arm_cp.17_3                            0x08000ed4   Number         4  main.o(.text.SysTick_Handler)
-    __arm_cp.17_4                            0x08000ed8   Number         4  main.o(.text.SysTick_Handler)
-    [Anonymous Symbol]                       0x08000edc   Section        0  system_stm32l0xx.o(.text.SystemInit)
-    [Anonymous Symbol]                       0x08000ee0   Section        0  main.o(.text.TIM21_IRQHandler)
-    [Anonymous Symbol]                       0x08000f08   Section        0  main.o(.text.TIM2_IRQHandler)
-    __arm_cp.14_0                            0x08000f24   Number         4  main.o(.text.TIM2_IRQHandler)
-    [Anonymous Symbol]                       0x08000f28   Section        0  uart.o(.text.USART2_IRQHandler)
-    __arm_cp.6_0                             0x08000f84   Number         4  uart.o(.text.USART2_IRQHandler)
-    __arm_cp.6_1                             0x08000f88   Number         4  uart.o(.text.USART2_IRQHandler)
-    __arm_cp.6_2                             0x08000f8c   Number         4  uart.o(.text.USART2_IRQHandler)
-    __arm_cp.6_3                             0x08000f90   Number         4  uart.o(.text.USART2_IRQHandler)
-    __arm_cp.6_4                             0x08000f94   Number         4  uart.o(.text.USART2_IRQHandler)
-    __arm_cp.6_5                             0x08000f98   Number         4  uart.o(.text.USART2_IRQHandler)
-    [Anonymous Symbol]                       0x08000f9c   Section        0  crc.o(.text.calc_crc)
-    __arm_cp.1_0                             0x08000fc4   Number         4  crc.o(.text.calc_crc)
-    [Anonymous Symbol]                       0x08000fc8   Section        0  timing.o(.text.call_after_us)
-    __arm_cp.8_0                             0x08001010   Number         4  timing.o(.text.call_after_us)
-    [Anonymous Symbol]                       0x08001014   Section        0  timing.o(.text.call_after_us_cancel)
-    __arm_cp.5_0                             0x08001034   Number         4  timing.o(.text.call_after_us_cancel)
-    [Anonymous Symbol]                       0x08001038   Section        0  crc.o(.text.crc_init)
-    __arm_cp.0_0                             0x08001060   Number         4  crc.o(.text.crc_init)
-    __arm_cp.0_1                             0x08001064   Number         4  crc.o(.text.crc_init)
-    [Anonymous Symbol]                       0x08001068   Section        0  timing.o(.text.delay_ms)
-    [Anonymous Symbol]                       0x08001080   Section        0  timing.o(.text.delay_us)
-    __arm_cp.6_0                             0x080010f4   Number         4  timing.o(.text.delay_us)
-    [Anonymous Symbol]                       0x080010f8   Section        0  main.o(.text.fputc)
-    [Anonymous Symbol]                       0x0800110c   Section        0  main.o(.text.gpio_init)
-    __arm_cp.2_0                             0x08001200   Number         4  main.o(.text.gpio_init)
-    __arm_cp.2_1                             0x08001204   Number         4  main.o(.text.gpio_init)
-    __arm_cp.2_2                             0x08001208   Number         4  main.o(.text.gpio_init)
-    [Anonymous Symbol]                       0x0800120c   Section        0  gpio.o(.text.gpio_read)
-    [Anonymous Symbol]                       0x08001214   Section        0  timing.o(.text.lptim1_init)
-    __arm_cp.2_0                             0x08001254   Number         4  timing.o(.text.lptim1_init)
-    __arm_cp.2_1                             0x08001258   Number         4  timing.o(.text.lptim1_init)
-    __arm_cp.2_2                             0x0800125c   Number         4  timing.o(.text.lptim1_init)
-    [Anonymous Symbol]                       0x08001260   Section        0  main.o(.text.main)
-    __arm_cp.0_30                            0x0800167c   Number         4  main.o(.text.main)
-    __arm_cp.0_32                            0x08001684   Number         4  main.o(.text.main)
-    __arm_cp.0_33                            0x08001688   Number         4  main.o(.text.main)
-    __arm_cp.0_34                            0x0800168c   Number         4  main.o(.text.main)
-    __arm_cp.0_37                            0x08001698   Number         4  main.o(.text.main)
-    __arm_cp.0_38                            0x0800169c   Number         4  main.o(.text.main)
-    __arm_cp.0_39                            0x080016a0   Number         4  main.o(.text.main)
-    __arm_cp.0_50                            0x0800173c   Number         4  main.o(.text.main)
-    __arm_cp.0_1                             0x08001974   Number         4  main.o(.text.main)
-    __arm_cp.0_5                             0x08001978   Number         4  main.o(.text.main)
-    __arm_cp.0_6                             0x0800197c   Number         4  main.o(.text.main)
-    __arm_cp.0_13                            0x08001980   Number         4  main.o(.text.main)
-    __arm_cp.0_14                            0x08001984   Number         4  main.o(.text.main)
-    __arm_cp.0_15                            0x08001988   Number         4  main.o(.text.main)
-    __arm_cp.0_16                            0x0800198c   Number         4  main.o(.text.main)
-    __arm_cp.0_17                            0x08001990   Number         4  main.o(.text.main)
-    __arm_cp.0_18                            0x08001994   Number         4  main.o(.text.main)
-    __arm_cp.0_19                            0x08001998   Number         4  main.o(.text.main)
-    __arm_cp.0_20                            0x0800199c   Number         4  main.o(.text.main)
-    __arm_cp.0_21                            0x080019a0   Number         4  main.o(.text.main)
-    __arm_cp.0_22                            0x080019a4   Number         4  main.o(.text.main)
-    __arm_cp.0_24                            0x080019a8   Number         4  main.o(.text.main)
-    __arm_cp.0_25                            0x080019ac   Number         4  main.o(.text.main)
-    __arm_cp.0_26                            0x080019b0   Number         4  main.o(.text.main)
-    __arm_cp.0_27                            0x080019b4   Number         4  main.o(.text.main)
-    __arm_cp.0_28                            0x080019b8   Number         4  main.o(.text.main)
-    __arm_cp.0_29                            0x080019bc   Number         4  main.o(.text.main)
-    [Anonymous Symbol]                       0x080019c0   Section        0  nrf24l01.o(.text.nrf24_ce_low)
-    [Anonymous Symbol]                       0x080019cc   Section        0  nrf24l01.o(.text.nrf24_flush_rx)
-    [Anonymous Symbol]                       0x080019ec   Section        0  nrf24l01.o(.text.nrf24_get_pwidth)
-    [Anonymous Symbol]                       0x08001a18   Section        0  nrf24l01.o(.text.nrf24_init)
-    __arm_cp.0_1                             0x08001bc4   Number         4  nrf24l01.o(.text.nrf24_init)
-    [Anonymous Symbol]                       0x08001bc8   Section        0  nrf24l01.o(.text.nrf24_listen)
-    [Anonymous Symbol]                       0x08001c50   Section        0  nrf24l01.o(.text.nrf24_read_rxfifo)
-    [Anonymous Symbol]                       0x08001c94   Section        0  nrf24l01.o(.text.nrf24_rx_finish)
-    [Anonymous Symbol]                       0x08001cc4   Section        0  nrf24l01.o(.text.nrf24_set_rxaddr)
-    [Anonymous Symbol]                       0x08001d34   Section        0  nrf24l01.o(.text.nrf24_set_txaddr)
-    __arm_cp.4_1                             0x08001d78   Number         4  nrf24l01.o(.text.nrf24_set_txaddr)
-    [Anonymous Symbol]                       0x08001d7c   Section        0  nrf24l01.o(.text.nrf24_set_txaddr_aa)
-    __arm_cp.5_1                             0x08001dfc   Number         4  nrf24l01.o(.text.nrf24_set_txaddr_aa)
-    [Anonymous Symbol]                       0x08001e00   Section        0  nrf24l01.o(.text.nrf24_status)
-    [Anonymous Symbol]                       0x08001e2c   Section        0  nrf24l01.o(.text.nrf24_tx_finish)
-    [Anonymous Symbol]                       0x08001e5c   Section        0  nrf24l01.o(.text.nrf24_tx_to_addr)
-    __arm_cp.14_0                            0x08001f68   Number         4  nrf24l01.o(.text.nrf24_tx_to_addr)
-    __arm_cp.14_1                            0x08001f6c   Number         4  nrf24l01.o(.text.nrf24_tx_to_addr)
-    __arm_cp.14_2                            0x08001f70   Number         4  nrf24l01.o(.text.nrf24_tx_to_addr)
-    __arm_cp.14_3                            0x08001f74   Number         4  nrf24l01.o(.text.nrf24_tx_to_addr)
-    [Anonymous Symbol]                       0x08001f78   Section        0  gpxtend_nrf.o(.text.nrf_get_announce_response)
-    [Anonymous Symbol]                       0x08001fd8   Section        0  gpxtend_nrf.o(.text.nrf_get_keepalive_response)
-    __arm_cp.8_0                             0x08002018   Number         4  gpxtend_nrf.o(.text.nrf_get_keepalive_response)
-    [Anonymous Symbol]                       0x0800201c   Section        0  gpxtend_nrf.o(.text.nrf_init)
-    __arm_cp.0_0                             0x08002080   Number         4  gpxtend_nrf.o(.text.nrf_init)
-    [Anonymous Symbol]                       0x08002084   Section        0  gpxtend_nrf.o(.text.nrf_pair)
-    __arm_cp.4_1                             0x080020d4   Number         4  gpxtend_nrf.o(.text.nrf_pair)
-    [Anonymous Symbol]                       0x080020d8   Section        0  gpxtend_nrf.o(.text.nrf_receive)
-    __arm_cp.1_2                             0x08002168   Number         4  gpxtend_nrf.o(.text.nrf_receive)
-    [Anonymous Symbol]                       0x0800216c   Section        0  gpxtend_nrf.o(.text.nrf_send)
-    [Anonymous Symbol]                       0x080021c4   Section        0  gpxtend_nrf.o(.text.nrf_send_announce_response)
-    __arm_cp.5_0                             0x08002224   Number         4  gpxtend_nrf.o(.text.nrf_send_announce_response)
-    [Anonymous Symbol]                       0x08002228   Section        0  gpxtend_nrf.o(.text.nrf_send_keepalive_packet)
-    __arm_cp.7_1                             0x08002274   Number         4  gpxtend_nrf.o(.text.nrf_send_keepalive_packet)
-    [Anonymous Symbol]                       0x08002278   Section        0  gpxtend_nrf.o(.text.nrf_set_txready)
-    __arm_cp.2_0                             0x08002280   Number         4  gpxtend_nrf.o(.text.nrf_set_txready)
-    [Anonymous Symbol]                       0x08002284   Section        0  spi.o(.text.spi1_init)
-    __arm_cp.0_1                             0x080022c8   Number         4  spi.o(.text.spi1_init)
-    [Anonymous Symbol]                       0x080022cc   Section        0  spi.o(.text.spi1_rx)
-    [Anonymous Symbol]                       0x080022f0   Section        0  spi.o(.text.spi1_tx)
-    [Anonymous Symbol]                       0x08002320   Section        0  spi.o(.text.spi1_txrx)
-    __arm_cp.3_0                             0x08002348   Number         4  spi.o(.text.spi1_txrx)
-    [Anonymous Symbol]                       0x0800234c   Section        0  timing.o(.text.start_btn_timer)
-    [Anonymous Symbol]                       0x08002368   Section        0  timing.o(.text.stop_btn_timer)
-    __arm_cp.4_0                             0x08002384   Number         4  timing.o(.text.stop_btn_timer)
-    __arm_cp.4_1                             0x08002388   Number         4  timing.o(.text.stop_btn_timer)
-    [Anonymous Symbol]                       0x0800238c   Section        0  timing.o(.text.tim21_init)
-    __arm_cp.1_0                             0x080023cc   Number         4  timing.o(.text.tim21_init)
-    __arm_cp.1_1                             0x080023d0   Number         4  timing.o(.text.tim21_init)
-    [Anonymous Symbol]                       0x080023d4   Section        0  timing.o(.text.tim2_init)
-    __arm_cp.0_1                             0x08002410   Number         4  timing.o(.text.tim2_init)
-    __arm_cp.0_2                             0x08002414   Number         4  timing.o(.text.tim2_init)
-    [Anonymous Symbol]                       0x08002418   Section        0  uart.o(.text.uart2_deinit)
-    __arm_cp.2_1                             0x08002444   Number         4  uart.o(.text.uart2_deinit)
-    __arm_cp.2_2                             0x08002448   Number         4  uart.o(.text.uart2_deinit)
-    [Anonymous Symbol]                       0x0800244c   Section        0  uart.o(.text.uart2_init_rxonly)
-    __arm_cp.0_0                             0x080024fc   Number         4  uart.o(.text.uart2_init_rxonly)
-    __arm_cp.0_1                             0x08002500   Number         4  uart.o(.text.uart2_init_rxonly)
-    __arm_cp.0_3                             0x08002504   Number         4  uart.o(.text.uart2_init_rxonly)
-    [Anonymous Symbol]                       0x08002508   Section        0  uart.o(.text.uart2_init_txonly_dma)
-    __arm_cp.1_0                             0x080025a8   Number         4  uart.o(.text.uart2_init_txonly_dma)
-    __arm_cp.1_1                             0x080025ac   Number         4  uart.o(.text.uart2_init_txonly_dma)
-    __arm_cp.1_3                             0x080025b0   Number         4  uart.o(.text.uart2_init_txonly_dma)
-    __arm_cp.1_4                             0x080025b4   Number         4  uart.o(.text.uart2_init_txonly_dma)
-    __arm_cp.1_5                             0x080025b8   Number         4  uart.o(.text.uart2_init_txonly_dma)
-    [Anonymous Symbol]                       0x080025bc   Section        0  uart.o(.text.uart2_putstr_dma)
-    [Anonymous Symbol]                       0x08002678   Section        0  uart.o(.text.uart2_rxtimeout_callback)
-    [Anonymous Symbol]                       0x080026ac   Section        0  uart.o(.text.uart2_tx_dma)
-    __arm_cp.4_0                             0x08002764   Number         4  uart.o(.text.uart2_tx_dma)
-    __arm_cp.4_1                             0x08002768   Number         4  uart.o(.text.uart2_tx_dma)
-    __arm_cp.4_2                             0x0800276c   Number         4  uart.o(.text.uart2_tx_dma)
-    [Anonymous Symbol]                       0x08002770   Section        0  main.o(.text.user_CE_hi)
-    __arm_cp.10_0                            0x08002778   Number         4  main.o(.text.user_CE_hi)
-    [Anonymous Symbol]                       0x0800277c   Section        0  main.o(.text.user_CE_low)
-    __arm_cp.4_0                             0x08002784   Number         4  main.o(.text.user_CE_low)
-    [Anonymous Symbol]                       0x08002788   Section        0  main.o(.text.user_CS_hi)
-    __arm_cp.11_0                            0x08002790   Number         4  main.o(.text.user_CS_hi)
-    [Anonymous Symbol]                       0x08002794   Section        0  main.o(.text.user_CS_low)
-    __arm_cp.5_0                             0x0800279c   Number         4  main.o(.text.user_CS_low)
-    [Anonymous Symbol]                       0x080027a0   Section        0  timing.o(.text.wait_for_IRQ)
-    __arm_cp.9_0                             0x08002824   Number         4  timing.o(.text.wait_for_IRQ)
-    __arm_cp.9_1                             0x08002828   Number         4  timing.o(.text.wait_for_IRQ)
-    i.__0printf$8                            0x0800282c   Section        0  printf8.o(i.__0printf$8)
-    i.__scatterload_copy                     0x0800284c   Section       14  handlers.o(i.__scatterload_copy)
-    i.__scatterload_null                     0x0800285a   Section        2  handlers.o(i.__scatterload_null)
-    i.__scatterload_zeroinit                 0x0800285c   Section       14  handlers.o(i.__scatterload_zeroinit)
-    _printf_core                             0x0800286d   Thumb Code  1020  printf8.o(i._printf_core)
-    i._printf_core                           0x0800286c   Section        0  printf8.o(i._printf_core)
-    _printf_post_padding                     0x08002c95   Thumb Code    32  printf8.o(i._printf_post_padding)
-    i._printf_post_padding                   0x08002c94   Section        0  printf8.o(i._printf_post_padding)
-    _printf_pre_padding                      0x08002cb5   Thumb Code    44  printf8.o(i._printf_pre_padding)
-    i._printf_pre_padding                    0x08002cb4   Section        0  printf8.o(i._printf_pre_padding)
-    nrf_config                               0x08002d06   Data          14  gpxtend_nrf.o(.rodata.nrf_config)
-    [Anonymous Symbol]                       0x08002d06   Section        0  gpxtend_nrf.o(.rodata.nrf_config)
-    .L.str.1                                 0x08002d30   Data          31  main.o(.rodata.str1.1)
-    [Anonymous Symbol]                       0x08002d30   Section        0  main.o(.rodata.str1.1)
-    .L.str                                   0x08002d4f   Data          30  main.o(.rodata.str1.1)
-    .L.str.6                                 0x08002d6d   Data          32  main.o(.rodata.str1.1)
-    .L.str.7                                 0x08002d8d   Data          31  main.o(.rodata.str1.1)
-    .L.str.2                                 0x08002dac   Data          26  main.o(.rodata.str1.1)
+    [Anonymous Symbol]                       0x08000530   Section        0  stm32l0xx_hal.o(.text.HAL_InitTick)
+    __arm_cp.1_0                             0x0800056c   Number         4  stm32l0xx_hal.o(.text.HAL_InitTick)
+    [Anonymous Symbol]                       0x08000570   Section        0  stm32l0xx_hal_msp.o(.text.HAL_MspInit)
+    __arm_cp.0_0                             0x08000584   Number         4  stm32l0xx_hal_msp.o(.text.HAL_MspInit)
+    [Anonymous Symbol]                       0x08000588   Section        0  stm32l0xx_hal_cortex.o(.text.HAL_NVIC_DisableIRQ)
+    __arm_cp.2_0                             0x080005a4   Number         4  stm32l0xx_hal_cortex.o(.text.HAL_NVIC_DisableIRQ)
+    [Anonymous Symbol]                       0x080005a8   Section        0  stm32l0xx_hal_cortex.o(.text.HAL_NVIC_EnableIRQ)
+    __arm_cp.1_0                             0x080005bc   Number         4  stm32l0xx_hal_cortex.o(.text.HAL_NVIC_EnableIRQ)
+    [Anonymous Symbol]                       0x080005c0   Section        0  stm32l0xx_hal_cortex.o(.text.HAL_NVIC_SetPriority)
+    __arm_cp.0_0                             0x080005f8   Number         4  stm32l0xx_hal_cortex.o(.text.HAL_NVIC_SetPriority)
+    __arm_cp.0_1                             0x080005fc   Number         4  stm32l0xx_hal_cortex.o(.text.HAL_NVIC_SetPriority)
+    [Anonymous Symbol]                       0x08000600   Section        0  stm32l0xx_hal_pwr.o(.text.HAL_PWR_DisableSleepOnExit)
+    [Anonymous Symbol]                       0x0800060c   Section        0  stm32l0xx_hal_pwr.o(.text.HAL_PWR_EnableSleepOnExit)
+    [Anonymous Symbol]                       0x08000618   Section        0  stm32l0xx_hal_pwr.o(.text.HAL_PWR_EnterSLEEPMode)
+    __arm_cp.8_0                             0x08000668   Number         4  stm32l0xx_hal_pwr.o(.text.HAL_PWR_EnterSLEEPMode)
+    __arm_cp.8_1                             0x0800066c   Number         4  stm32l0xx_hal_pwr.o(.text.HAL_PWR_EnterSLEEPMode)
+    __arm_cp.8_2                             0x08000670   Number         4  stm32l0xx_hal_pwr.o(.text.HAL_PWR_EnterSLEEPMode)
+    [Anonymous Symbol]                       0x08000674   Section        0  stm32l0xx_hal_rcc.o(.text.HAL_RCC_ClockConfig)
+    __arm_cp.3_0                             0x08000874   Number         4  stm32l0xx_hal_rcc.o(.text.HAL_RCC_ClockConfig)
+    __arm_cp.3_1                             0x08000878   Number         4  stm32l0xx_hal_rcc.o(.text.HAL_RCC_ClockConfig)
+    __arm_cp.3_3                             0x0800087c   Number         4  stm32l0xx_hal_rcc.o(.text.HAL_RCC_ClockConfig)
+    __arm_cp.3_4                             0x08000880   Number         4  stm32l0xx_hal_rcc.o(.text.HAL_RCC_ClockConfig)
+    __arm_cp.3_5                             0x08000884   Number         4  stm32l0xx_hal_rcc.o(.text.HAL_RCC_ClockConfig)
+    __arm_cp.3_6                             0x08000888   Number         4  stm32l0xx_hal_rcc.o(.text.HAL_RCC_ClockConfig)
+    __arm_cp.3_7                             0x0800088c   Number         4  stm32l0xx_hal_rcc.o(.text.HAL_RCC_ClockConfig)
+    __arm_cp.3_9                             0x08000890   Number         4  stm32l0xx_hal_rcc.o(.text.HAL_RCC_ClockConfig)
+    [Anonymous Symbol]                       0x08000894   Section        0  stm32l0xx_hal_rcc.o(.text.HAL_RCC_GetPCLK1Freq)
+    __arm_cp.6_0                             0x080008a8   Number         4  stm32l0xx_hal_rcc.o(.text.HAL_RCC_GetPCLK1Freq)
+    __arm_cp.6_1                             0x080008ac   Number         4  stm32l0xx_hal_rcc.o(.text.HAL_RCC_GetPCLK1Freq)
+    __arm_cp.6_2                             0x080008b0   Number         4  stm32l0xx_hal_rcc.o(.text.HAL_RCC_GetPCLK1Freq)
+    [Anonymous Symbol]                       0x080008b4   Section        0  stm32l0xx_hal_rcc.o(.text.HAL_RCC_OscConfig)
+    __arm_cp.1_12                            0x08000a48   Number         4  stm32l0xx_hal_rcc.o(.text.HAL_RCC_OscConfig)
+    __arm_cp.1_13                            0x08000a4c   Number         4  stm32l0xx_hal_rcc.o(.text.HAL_RCC_OscConfig)
+    __arm_cp.1_1                             0x08000da0   Number         4  stm32l0xx_hal_rcc.o(.text.HAL_RCC_OscConfig)
+    __arm_cp.1_2                             0x08000da4   Number         4  stm32l0xx_hal_rcc.o(.text.HAL_RCC_OscConfig)
+    __arm_cp.1_3                             0x08000da8   Number         4  stm32l0xx_hal_rcc.o(.text.HAL_RCC_OscConfig)
+    __arm_cp.1_4                             0x08000dac   Number         4  stm32l0xx_hal_rcc.o(.text.HAL_RCC_OscConfig)
+    __arm_cp.1_5                             0x08000db0   Number         4  stm32l0xx_hal_rcc.o(.text.HAL_RCC_OscConfig)
+    __arm_cp.1_6                             0x08000db4   Number         4  stm32l0xx_hal_rcc.o(.text.HAL_RCC_OscConfig)
+    __arm_cp.1_7                             0x08000db8   Number         4  stm32l0xx_hal_rcc.o(.text.HAL_RCC_OscConfig)
+    __arm_cp.1_9                             0x08000dbc   Number         4  stm32l0xx_hal_rcc.o(.text.HAL_RCC_OscConfig)
+    [Anonymous Symbol]                       0x08000dc0   Section        0  stm32l0xx_hal_cortex.o(.text.HAL_SYSTICK_Config)
+    __arm_cp.4_0                             0x08000de8   Number         4  stm32l0xx_hal_cortex.o(.text.HAL_SYSTICK_Config)
+    __arm_cp.4_1                             0x08000dec   Number         4  stm32l0xx_hal_cortex.o(.text.HAL_SYSTICK_Config)
+    __arm_cp.4_2                             0x08000df0   Number         4  stm32l0xx_hal_cortex.o(.text.HAL_SYSTICK_Config)
+    [Anonymous Symbol]                       0x08000df4   Section        0  stm32l0xx_it.o(.text.HardFault_Handler)
+    [Anonymous Symbol]                       0x08000df8   Section        0  main.o(.text.LPTIM1_IRQHandler)
+    __arm_cp.16_0                            0x08000e5c   Number         4  main.o(.text.LPTIM1_IRQHandler)
+    __arm_cp.16_1                            0x08000e60   Number         4  main.o(.text.LPTIM1_IRQHandler)
+    __arm_cp.16_2                            0x08000e64   Number         4  main.o(.text.LPTIM1_IRQHandler)
+    __arm_cp.16_3                            0x08000e68   Number         4  main.o(.text.LPTIM1_IRQHandler)
+    [Anonymous Symbol]                       0x08000e6c   Section        0  stm32l0xx_it.o(.text.NMI_Handler)
+    [Anonymous Symbol]                       0x08000e6e   Section        0  stm32l0xx_it.o(.text.PendSV_Handler)
+    [Anonymous Symbol]                       0x08000e70   Section        0  stm32l0xx_it.o(.text.SVC_Handler)
+    [Anonymous Symbol]                       0x08000e74   Section        0  main.o(.text.SysTick_Handler)
+    __arm_cp.17_0                            0x08000ec4   Number         4  main.o(.text.SysTick_Handler)
+    __arm_cp.17_1                            0x08000ec8   Number         4  main.o(.text.SysTick_Handler)
+    __arm_cp.17_2                            0x08000ecc   Number         4  main.o(.text.SysTick_Handler)
+    __arm_cp.17_3                            0x08000ed0   Number         4  main.o(.text.SysTick_Handler)
+    __arm_cp.17_4                            0x08000ed4   Number         4  main.o(.text.SysTick_Handler)
+    [Anonymous Symbol]                       0x08000ed8   Section        0  system_stm32l0xx.o(.text.SystemInit)
+    [Anonymous Symbol]                       0x08000edc   Section        0  main.o(.text.TIM21_IRQHandler)
+    [Anonymous Symbol]                       0x08000f04   Section        0  main.o(.text.TIM2_IRQHandler)
+    __arm_cp.14_0                            0x08000f20   Number         4  main.o(.text.TIM2_IRQHandler)
+    [Anonymous Symbol]                       0x08000f24   Section        0  uart.o(.text.USART2_IRQHandler)
+    __arm_cp.6_0                             0x08000f80   Number         4  uart.o(.text.USART2_IRQHandler)
+    __arm_cp.6_1                             0x08000f84   Number         4  uart.o(.text.USART2_IRQHandler)
+    __arm_cp.6_2                             0x08000f88   Number         4  uart.o(.text.USART2_IRQHandler)
+    __arm_cp.6_3                             0x08000f8c   Number         4  uart.o(.text.USART2_IRQHandler)
+    __arm_cp.6_4                             0x08000f90   Number         4  uart.o(.text.USART2_IRQHandler)
+    __arm_cp.6_5                             0x08000f94   Number         4  uart.o(.text.USART2_IRQHandler)
+    [Anonymous Symbol]                       0x08000f98   Section        0  crc.o(.text.calc_crc)
+    __arm_cp.1_0                             0x08000fc0   Number         4  crc.o(.text.calc_crc)
+    [Anonymous Symbol]                       0x08000fc4   Section        0  timing.o(.text.call_after_us)
+    __arm_cp.8_0                             0x0800100c   Number         4  timing.o(.text.call_after_us)
+    [Anonymous Symbol]                       0x08001010   Section        0  timing.o(.text.call_after_us_cancel)
+    __arm_cp.5_0                             0x08001030   Number         4  timing.o(.text.call_after_us_cancel)
+    [Anonymous Symbol]                       0x08001034   Section        0  crc.o(.text.crc_init)
+    __arm_cp.0_0                             0x0800105c   Number         4  crc.o(.text.crc_init)
+    __arm_cp.0_1                             0x08001060   Number         4  crc.o(.text.crc_init)
+    [Anonymous Symbol]                       0x08001064   Section        0  timing.o(.text.delay_ms)
+    [Anonymous Symbol]                       0x0800107c   Section        0  timing.o(.text.delay_us)
+    __arm_cp.6_0                             0x080010f0   Number         4  timing.o(.text.delay_us)
+    [Anonymous Symbol]                       0x080010f4   Section        0  main.o(.text.fputc)
+    [Anonymous Symbol]                       0x08001108   Section        0  main.o(.text.gpio_init)
+    __arm_cp.2_0                             0x080011fc   Number         4  main.o(.text.gpio_init)
+    __arm_cp.2_1                             0x08001200   Number         4  main.o(.text.gpio_init)
+    __arm_cp.2_2                             0x08001204   Number         4  main.o(.text.gpio_init)
+    [Anonymous Symbol]                       0x08001208   Section        0  gpio.o(.text.gpio_read)
+    [Anonymous Symbol]                       0x08001210   Section        0  timing.o(.text.lptim1_init)
+    __arm_cp.2_0                             0x08001250   Number         4  timing.o(.text.lptim1_init)
+    __arm_cp.2_1                             0x08001254   Number         4  timing.o(.text.lptim1_init)
+    __arm_cp.2_2                             0x08001258   Number         4  timing.o(.text.lptim1_init)
+    [Anonymous Symbol]                       0x0800125c   Section        0  main.o(.text.main)
+    __arm_cp.0_31                            0x08001668   Number         4  main.o(.text.main)
+    __arm_cp.0_33                            0x08001670   Number         4  main.o(.text.main)
+    __arm_cp.0_34                            0x08001674   Number         4  main.o(.text.main)
+    __arm_cp.0_35                            0x08001678   Number         4  main.o(.text.main)
+    __arm_cp.0_38                            0x08001684   Number         4  main.o(.text.main)
+    __arm_cp.0_39                            0x08001688   Number         4  main.o(.text.main)
+    __arm_cp.0_40                            0x0800168c   Number         4  main.o(.text.main)
+    __arm_cp.0_51                            0x08001728   Number         4  main.o(.text.main)
+    __arm_cp.0_1                             0x08001944   Number         4  main.o(.text.main)
+    __arm_cp.0_5                             0x08001948   Number         4  main.o(.text.main)
+    __arm_cp.0_6                             0x0800194c   Number         4  main.o(.text.main)
+    __arm_cp.0_13                            0x08001950   Number         4  main.o(.text.main)
+    __arm_cp.0_14                            0x08001954   Number         4  main.o(.text.main)
+    __arm_cp.0_15                            0x08001958   Number         4  main.o(.text.main)
+    __arm_cp.0_16                            0x0800195c   Number         4  main.o(.text.main)
+    __arm_cp.0_17                            0x08001960   Number         4  main.o(.text.main)
+    __arm_cp.0_18                            0x08001964   Number         4  main.o(.text.main)
+    __arm_cp.0_19                            0x08001968   Number         4  main.o(.text.main)
+    __arm_cp.0_20                            0x0800196c   Number         4  main.o(.text.main)
+    __arm_cp.0_21                            0x08001970   Number         4  main.o(.text.main)
+    __arm_cp.0_22                            0x08001974   Number         4  main.o(.text.main)
+    __arm_cp.0_24                            0x08001978   Number         4  main.o(.text.main)
+    __arm_cp.0_25                            0x0800197c   Number         4  main.o(.text.main)
+    __arm_cp.0_26                            0x08001980   Number         4  main.o(.text.main)
+    __arm_cp.0_27                            0x08001984   Number         4  main.o(.text.main)
+    __arm_cp.0_28                            0x08001988   Number         4  main.o(.text.main)
+    __arm_cp.0_29                            0x0800198c   Number         4  main.o(.text.main)
+    __arm_cp.0_30                            0x08001990   Number         4  main.o(.text.main)
+    [Anonymous Symbol]                       0x08001994   Section        0  nrf24l01.o(.text.nrf24_ce_low)
+    [Anonymous Symbol]                       0x080019a0   Section        0  nrf24l01.o(.text.nrf24_flush_rx)
+    [Anonymous Symbol]                       0x080019c0   Section        0  nrf24l01.o(.text.nrf24_get_pwidth)
+    [Anonymous Symbol]                       0x080019ec   Section        0  nrf24l01.o(.text.nrf24_init)
+    __arm_cp.0_1                             0x08001b98   Number         4  nrf24l01.o(.text.nrf24_init)
+    [Anonymous Symbol]                       0x08001b9c   Section        0  nrf24l01.o(.text.nrf24_listen)
+    [Anonymous Symbol]                       0x08001c24   Section        0  nrf24l01.o(.text.nrf24_read_rxfifo)
+    [Anonymous Symbol]                       0x08001c68   Section        0  nrf24l01.o(.text.nrf24_rx_finish)
+    [Anonymous Symbol]                       0x08001c98   Section        0  nrf24l01.o(.text.nrf24_set_rxaddr)
+    [Anonymous Symbol]                       0x08001d08   Section        0  nrf24l01.o(.text.nrf24_set_txaddr)
+    __arm_cp.4_1                             0x08001d4c   Number         4  nrf24l01.o(.text.nrf24_set_txaddr)
+    [Anonymous Symbol]                       0x08001d50   Section        0  nrf24l01.o(.text.nrf24_set_txaddr_aa)
+    __arm_cp.5_1                             0x08001dd0   Number         4  nrf24l01.o(.text.nrf24_set_txaddr_aa)
+    [Anonymous Symbol]                       0x08001dd4   Section        0  nrf24l01.o(.text.nrf24_status)
+    [Anonymous Symbol]                       0x08001e00   Section        0  nrf24l01.o(.text.nrf24_tx_finish)
+    [Anonymous Symbol]                       0x08001e30   Section        0  nrf24l01.o(.text.nrf24_tx_to_addr)
+    __arm_cp.14_0                            0x08001f3c   Number         4  nrf24l01.o(.text.nrf24_tx_to_addr)
+    __arm_cp.14_1                            0x08001f40   Number         4  nrf24l01.o(.text.nrf24_tx_to_addr)
+    __arm_cp.14_2                            0x08001f44   Number         4  nrf24l01.o(.text.nrf24_tx_to_addr)
+    __arm_cp.14_3                            0x08001f48   Number         4  nrf24l01.o(.text.nrf24_tx_to_addr)
+    [Anonymous Symbol]                       0x08001f4c   Section        0  gpxtend_nrf.o(.text.nrf_get_announce_response)
+    [Anonymous Symbol]                       0x08001fac   Section        0  gpxtend_nrf.o(.text.nrf_get_keepalive_response)
+    __arm_cp.8_0                             0x08001fec   Number         4  gpxtend_nrf.o(.text.nrf_get_keepalive_response)
+    [Anonymous Symbol]                       0x08001ff0   Section        0  gpxtend_nrf.o(.text.nrf_init)
+    __arm_cp.0_0                             0x08002054   Number         4  gpxtend_nrf.o(.text.nrf_init)
+    [Anonymous Symbol]                       0x08002058   Section        0  gpxtend_nrf.o(.text.nrf_pair)
+    __arm_cp.4_1                             0x080020a8   Number         4  gpxtend_nrf.o(.text.nrf_pair)
+    [Anonymous Symbol]                       0x080020ac   Section        0  gpxtend_nrf.o(.text.nrf_receive)
+    __arm_cp.1_2                             0x0800213c   Number         4  gpxtend_nrf.o(.text.nrf_receive)
+    [Anonymous Symbol]                       0x08002140   Section        0  gpxtend_nrf.o(.text.nrf_send)
+    [Anonymous Symbol]                       0x08002198   Section        0  gpxtend_nrf.o(.text.nrf_send_announce_response)
+    __arm_cp.5_0                             0x080021f8   Number         4  gpxtend_nrf.o(.text.nrf_send_announce_response)
+    [Anonymous Symbol]                       0x080021fc   Section        0  gpxtend_nrf.o(.text.nrf_send_keepalive_packet)
+    __arm_cp.7_1                             0x08002248   Number         4  gpxtend_nrf.o(.text.nrf_send_keepalive_packet)
+    [Anonymous Symbol]                       0x0800224c   Section        0  gpxtend_nrf.o(.text.nrf_set_txready)
+    __arm_cp.2_0                             0x08002254   Number         4  gpxtend_nrf.o(.text.nrf_set_txready)
+    [Anonymous Symbol]                       0x08002258   Section        0  spi.o(.text.spi1_init)
+    __arm_cp.0_1                             0x0800229c   Number         4  spi.o(.text.spi1_init)
+    [Anonymous Symbol]                       0x080022a0   Section        0  spi.o(.text.spi1_rx)
+    [Anonymous Symbol]                       0x080022c4   Section        0  spi.o(.text.spi1_tx)
+    [Anonymous Symbol]                       0x080022f4   Section        0  spi.o(.text.spi1_txrx)
+    __arm_cp.3_0                             0x0800231c   Number         4  spi.o(.text.spi1_txrx)
+    [Anonymous Symbol]                       0x08002320   Section        0  timing.o(.text.start_btn_timer)
+    [Anonymous Symbol]                       0x0800233c   Section        0  timing.o(.text.stop_btn_timer)
+    __arm_cp.4_0                             0x08002358   Number         4  timing.o(.text.stop_btn_timer)
+    __arm_cp.4_1                             0x0800235c   Number         4  timing.o(.text.stop_btn_timer)
+    [Anonymous Symbol]                       0x08002360   Section        0  timing.o(.text.tim21_init)
+    __arm_cp.1_0                             0x080023a0   Number         4  timing.o(.text.tim21_init)
+    __arm_cp.1_1                             0x080023a4   Number         4  timing.o(.text.tim21_init)
+    [Anonymous Symbol]                       0x080023a8   Section        0  timing.o(.text.tim2_init)
+    __arm_cp.0_1                             0x080023e4   Number         4  timing.o(.text.tim2_init)
+    __arm_cp.0_2                             0x080023e8   Number         4  timing.o(.text.tim2_init)
+    [Anonymous Symbol]                       0x080023ec   Section        0  uart.o(.text.uart2_deinit)
+    __arm_cp.2_1                             0x08002418   Number         4  uart.o(.text.uart2_deinit)
+    __arm_cp.2_2                             0x0800241c   Number         4  uart.o(.text.uart2_deinit)
+    [Anonymous Symbol]                       0x08002420   Section        0  uart.o(.text.uart2_init_rxonly)
+    __arm_cp.0_0                             0x080024d4   Number         4  uart.o(.text.uart2_init_rxonly)
+    __arm_cp.0_1                             0x080024d8   Number         4  uart.o(.text.uart2_init_rxonly)
+    __arm_cp.0_3                             0x080024dc   Number         4  uart.o(.text.uart2_init_rxonly)
+    [Anonymous Symbol]                       0x080024e0   Section        0  uart.o(.text.uart2_init_txonly_dma)
+    __arm_cp.1_0                             0x08002580   Number         4  uart.o(.text.uart2_init_txonly_dma)
+    __arm_cp.1_1                             0x08002584   Number         4  uart.o(.text.uart2_init_txonly_dma)
+    __arm_cp.1_3                             0x08002588   Number         4  uart.o(.text.uart2_init_txonly_dma)
+    __arm_cp.1_4                             0x0800258c   Number         4  uart.o(.text.uart2_init_txonly_dma)
+    __arm_cp.1_5                             0x08002590   Number         4  uart.o(.text.uart2_init_txonly_dma)
+    [Anonymous Symbol]                       0x08002594   Section        0  uart.o(.text.uart2_putstr_dma)
+    [Anonymous Symbol]                       0x08002650   Section        0  uart.o(.text.uart2_rxtimeout_callback)
+    [Anonymous Symbol]                       0x08002684   Section        0  uart.o(.text.uart2_tx_dma)
+    __arm_cp.4_0                             0x0800273c   Number         4  uart.o(.text.uart2_tx_dma)
+    __arm_cp.4_1                             0x08002740   Number         4  uart.o(.text.uart2_tx_dma)
+    __arm_cp.4_2                             0x08002744   Number         4  uart.o(.text.uart2_tx_dma)
+    [Anonymous Symbol]                       0x08002748   Section        0  main.o(.text.user_CE_hi)
+    __arm_cp.10_0                            0x08002750   Number         4  main.o(.text.user_CE_hi)
+    [Anonymous Symbol]                       0x08002754   Section        0  main.o(.text.user_CE_low)
+    __arm_cp.4_0                             0x0800275c   Number         4  main.o(.text.user_CE_low)
+    [Anonymous Symbol]                       0x08002760   Section        0  main.o(.text.user_CS_hi)
+    __arm_cp.11_0                            0x08002768   Number         4  main.o(.text.user_CS_hi)
+    [Anonymous Symbol]                       0x0800276c   Section        0  main.o(.text.user_CS_low)
+    __arm_cp.5_0                             0x08002774   Number         4  main.o(.text.user_CS_low)
+    [Anonymous Symbol]                       0x08002778   Section        0  timing.o(.text.wait_for_IRQ)
+    __arm_cp.9_0                             0x080027fc   Number         4  timing.o(.text.wait_for_IRQ)
+    __arm_cp.9_1                             0x08002800   Number         4  timing.o(.text.wait_for_IRQ)
+    i.__0printf$8                            0x08002804   Section        0  printf8.o(i.__0printf$8)
+    i.__scatterload_copy                     0x08002824   Section       14  handlers.o(i.__scatterload_copy)
+    i.__scatterload_null                     0x08002832   Section        2  handlers.o(i.__scatterload_null)
+    i.__scatterload_zeroinit                 0x08002834   Section       14  handlers.o(i.__scatterload_zeroinit)
+    _printf_core                             0x08002845   Thumb Code  1020  printf8.o(i._printf_core)
+    i._printf_core                           0x08002844   Section        0  printf8.o(i._printf_core)
+    _printf_post_padding                     0x08002c6d   Thumb Code    32  printf8.o(i._printf_post_padding)
+    i._printf_post_padding                   0x08002c6c   Section        0  printf8.o(i._printf_post_padding)
+    _printf_pre_padding                      0x08002c8d   Thumb Code    44  printf8.o(i._printf_pre_padding)
+    i._printf_pre_padding                    0x08002c8c   Section        0  printf8.o(i._printf_pre_padding)
+    nrf_config                               0x08002cde   Data          14  gpxtend_nrf.o(.rodata.nrf_config)
+    [Anonymous Symbol]                       0x08002cde   Section        0  gpxtend_nrf.o(.rodata.nrf_config)
+    .L.str                                   0x08002d08   Data          30  main.o(.rodata.str1.1)
+    [Anonymous Symbol]                       0x08002d08   Section        0  main.o(.rodata.str1.1)
+    .L.str.1                                 0x08002d26   Data          31  main.o(.rodata.str1.1)
+    .L.str.6                                 0x08002d45   Data          32  main.o(.rodata.str1.1)
+    .L.str.7                                 0x08002d65   Data          31  main.o(.rodata.str1.1)
+    .L.str.2                                 0x08002d84   Data          26  main.o(.rodata.str1.1)
     .data                                    0x20000000   Section        4  stdout.o(.data)
     base_config                              0x20000018   Data           1  nrf24l01.o(.bss.base_config)
     [Anonymous Symbol]                       0x20000018   Section        0  nrf24l01.o(.bss.base_config)
@@ -1654,94 +1655,94 @@ Image Symbol Table
     HAL_GPIO_WritePin                        0x080004e1   Thumb Code    16  stm32l0xx_hal_gpio.o(.text.HAL_GPIO_WritePin)
     HAL_GetTick                              0x080004f1   Thumb Code     8  stm32l0xx_hal.o(.text.HAL_GetTick)
     HAL_IncTick                              0x080004f9   Thumb Code    20  stm32l0xx_hal.o(.text.HAL_IncTick)
-    HAL_Init                                 0x0800050d   Thumb Code    40  stm32l0xx_hal.o(.text.HAL_Init)
-    HAL_InitTick                             0x08000535   Thumb Code    64  stm32l0xx_hal.o(.text.HAL_InitTick)
-    HAL_MspInit                              0x08000575   Thumb Code    24  stm32l0xx_hal_msp.o(.text.HAL_MspInit)
-    HAL_NVIC_DisableIRQ                      0x0800058d   Thumb Code    32  stm32l0xx_hal_cortex.o(.text.HAL_NVIC_DisableIRQ)
-    HAL_NVIC_EnableIRQ                       0x080005ad   Thumb Code    24  stm32l0xx_hal_cortex.o(.text.HAL_NVIC_EnableIRQ)
-    HAL_NVIC_SetPriority                     0x080005c5   Thumb Code    64  stm32l0xx_hal_cortex.o(.text.HAL_NVIC_SetPriority)
-    HAL_PWR_DisableSleepOnExit               0x08000605   Thumb Code    12  stm32l0xx_hal_pwr.o(.text.HAL_PWR_DisableSleepOnExit)
-    HAL_PWR_EnableSleepOnExit                0x08000611   Thumb Code    12  stm32l0xx_hal_pwr.o(.text.HAL_PWR_EnableSleepOnExit)
-    HAL_PWR_EnterSLEEPMode                   0x0800061d   Thumb Code    92  stm32l0xx_hal_pwr.o(.text.HAL_PWR_EnterSLEEPMode)
-    HAL_RCC_ClockConfig                      0x08000679   Thumb Code   544  stm32l0xx_hal_rcc.o(.text.HAL_RCC_ClockConfig)
-    HAL_RCC_GetPCLK1Freq                     0x08000899   Thumb Code    32  stm32l0xx_hal_rcc.o(.text.HAL_RCC_GetPCLK1Freq)
-    HAL_RCC_OscConfig                        0x080008b9   Thumb Code  1292  stm32l0xx_hal_rcc.o(.text.HAL_RCC_OscConfig)
-    HAL_SYSTICK_Config                       0x08000dc5   Thumb Code    52  stm32l0xx_hal_cortex.o(.text.HAL_SYSTICK_Config)
-    HardFault_Handler                        0x08000df9   Thumb Code     2  stm32l0xx_it.o(.text.HardFault_Handler)
-    LPTIM1_IRQHandler                        0x08000dfd   Thumb Code   116  main.o(.text.LPTIM1_IRQHandler)
-    NMI_Handler                              0x08000e71   Thumb Code     2  stm32l0xx_it.o(.text.NMI_Handler)
-    PendSV_Handler                           0x08000e73   Thumb Code     2  stm32l0xx_it.o(.text.PendSV_Handler)
-    SVC_Handler                              0x08000e75   Thumb Code     2  stm32l0xx_it.o(.text.SVC_Handler)
-    SysTick_Handler                          0x08000e79   Thumb Code   100  main.o(.text.SysTick_Handler)
-    SystemInit                               0x08000edd   Thumb Code     2  system_stm32l0xx.o(.text.SystemInit)
-    TIM21_IRQHandler                         0x08000ee1   Thumb Code    40  main.o(.text.TIM21_IRQHandler)
-    TIM2_IRQHandler                          0x08000f09   Thumb Code    32  main.o(.text.TIM2_IRQHandler)
-    USART2_IRQHandler                        0x08000f29   Thumb Code   116  uart.o(.text.USART2_IRQHandler)
-    calc_crc                                 0x08000f9d   Thumb Code    44  crc.o(.text.calc_crc)
-    call_after_us                            0x08000fc9   Thumb Code    76  timing.o(.text.call_after_us)
-    call_after_us_cancel                     0x08001015   Thumb Code    36  timing.o(.text.call_after_us_cancel)
-    crc_init                                 0x08001039   Thumb Code    48  crc.o(.text.crc_init)
-    delay_ms                                 0x08001069   Thumb Code    24  timing.o(.text.delay_ms)
-    delay_us                                 0x08001081   Thumb Code   120  timing.o(.text.delay_us)
-    fputc                                    0x080010f9   Thumb Code    20  main.o(.text.fputc)
-    gpio_init                                0x0800110d   Thumb Code   256  main.o(.text.gpio_init)
-    gpio_read                                0x0800120d   Thumb Code     6  gpio.o(.text.gpio_read)
-    lptim1_init                              0x08001215   Thumb Code    76  timing.o(.text.lptim1_init)
-    main                                     0x08001261   Thumb Code  1888  main.o(.text.main)
-    nrf24_ce_low                             0x080019c1   Thumb Code    12  nrf24l01.o(.text.nrf24_ce_low)
-    nrf24_flush_rx                           0x080019cd   Thumb Code    32  nrf24l01.o(.text.nrf24_flush_rx)
-    nrf24_get_pwidth                         0x080019ed   Thumb Code    44  nrf24l01.o(.text.nrf24_get_pwidth)
-    nrf24_init                               0x08001a19   Thumb Code   432  nrf24l01.o(.text.nrf24_init)
-    nrf24_listen                             0x08001bc9   Thumb Code   136  nrf24l01.o(.text.nrf24_listen)
-    nrf24_read_rxfifo                        0x08001c51   Thumb Code    68  nrf24l01.o(.text.nrf24_read_rxfifo)
-    nrf24_rx_finish                          0x08001c95   Thumb Code    48  nrf24l01.o(.text.nrf24_rx_finish)
-    nrf24_set_rxaddr                         0x08001cc5   Thumb Code   112  nrf24l01.o(.text.nrf24_set_rxaddr)
-    nrf24_set_txaddr                         0x08001d35   Thumb Code    72  nrf24l01.o(.text.nrf24_set_txaddr)
-    nrf24_set_txaddr_aa                      0x08001d7d   Thumb Code   132  nrf24l01.o(.text.nrf24_set_txaddr_aa)
-    nrf24_status                             0x08001e01   Thumb Code    44  nrf24l01.o(.text.nrf24_status)
-    nrf24_tx_finish                          0x08001e2d   Thumb Code    48  nrf24l01.o(.text.nrf24_tx_finish)
-    nrf24_tx_to_addr                         0x08001e5d   Thumb Code   284  nrf24l01.o(.text.nrf24_tx_to_addr)
-    nrf_get_announce_response                0x08001f79   Thumb Code    96  gpxtend_nrf.o(.text.nrf_get_announce_response)
-    nrf_get_keepalive_response               0x08001fd9   Thumb Code    68  gpxtend_nrf.o(.text.nrf_get_keepalive_response)
-    nrf_init                                 0x0800201d   Thumb Code   104  gpxtend_nrf.o(.text.nrf_init)
-    nrf_pair                                 0x08002085   Thumb Code    84  gpxtend_nrf.o(.text.nrf_pair)
-    nrf_receive                              0x080020d9   Thumb Code   148  gpxtend_nrf.o(.text.nrf_receive)
-    nrf_send                                 0x0800216d   Thumb Code    88  gpxtend_nrf.o(.text.nrf_send)
-    nrf_send_announce_response               0x080021c5   Thumb Code   100  gpxtend_nrf.o(.text.nrf_send_announce_response)
-    nrf_send_keepalive_packet                0x08002229   Thumb Code    80  gpxtend_nrf.o(.text.nrf_send_keepalive_packet)
-    nrf_set_txready                          0x08002279   Thumb Code    12  gpxtend_nrf.o(.text.nrf_set_txready)
-    spi1_init                                0x08002285   Thumb Code    72  spi.o(.text.spi1_init)
-    spi1_rx                                  0x080022cd   Thumb Code    36  spi.o(.text.spi1_rx)
-    spi1_tx                                  0x080022f1   Thumb Code    48  spi.o(.text.spi1_tx)
-    spi1_txrx                                0x08002321   Thumb Code    44  spi.o(.text.spi1_txrx)
-    start_btn_timer                          0x0800234d   Thumb Code    28  timing.o(.text.start_btn_timer)
-    stop_btn_timer                           0x08002369   Thumb Code    36  timing.o(.text.stop_btn_timer)
-    tim21_init                               0x0800238d   Thumb Code    72  timing.o(.text.tim21_init)
-    tim2_init                                0x080023d5   Thumb Code    68  timing.o(.text.tim2_init)
-    uart2_deinit                             0x08002419   Thumb Code    52  uart.o(.text.uart2_deinit)
-    uart2_init_rxonly                        0x0800244d   Thumb Code   188  uart.o(.text.uart2_init_rxonly)
-    uart2_init_txonly_dma                    0x08002509   Thumb Code   180  uart.o(.text.uart2_init_txonly_dma)
-    uart2_putstr_dma                         0x080025bd   Thumb Code   188  uart.o(.text.uart2_putstr_dma)
-    uart2_rxtimeout_callback                 0x08002679   Thumb Code    52  uart.o(.text.uart2_rxtimeout_callback)
-    uart2_tx_dma                             0x080026ad   Thumb Code   196  uart.o(.text.uart2_tx_dma)
-    user_CE_hi                               0x08002771   Thumb Code    12  main.o(.text.user_CE_hi)
-    user_CE_low                              0x0800277d   Thumb Code    12  main.o(.text.user_CE_low)
-    user_CS_hi                               0x08002789   Thumb Code    12  main.o(.text.user_CS_hi)
-    user_CS_low                              0x08002795   Thumb Code    12  main.o(.text.user_CS_low)
-    wait_for_IRQ                             0x080027a1   Thumb Code   140  timing.o(.text.wait_for_IRQ)
-    __0printf$8                              0x0800282d   Thumb Code    24  printf8.o(i.__0printf$8)
-    __1printf$8                              0x0800282d   Thumb Code     0  printf8.o(i.__0printf$8)
-    __2printf                                0x0800282d   Thumb Code     0  printf8.o(i.__0printf$8)
-    __scatterload_copy                       0x0800284d   Thumb Code    14  handlers.o(i.__scatterload_copy)
-    __scatterload_null                       0x0800285b   Thumb Code     2  handlers.o(i.__scatterload_null)
-    __scatterload_zeroinit                   0x0800285d   Thumb Code    14  handlers.o(i.__scatterload_zeroinit)
-    AHBPrescTable                            0x08002ce0   Data          16  system_stm32l0xx.o(.rodata.AHBPrescTable)
-    ANNOUNCE_ADDR                            0x08002cf0   Data           5  gpxtend_nrf.o(.rodata.ANNOUNCE_ADDR)
-    APBPrescTable                            0x08002cf5   Data           8  system_stm32l0xx.o(.rodata.APBPrescTable)
-    PLLMulTable                              0x08002cfd   Data           9  system_stm32l0xx.o(.rodata.PLLMulTable)
-    spi                                      0x08002d14   Data          28  gpxtend_nrf.o(.rodata.spi)
-    Region$$Table$$Base                      0x08002dc8   Number         0  anon$$obj.o(Region$$Table)
-    Region$$Table$$Limit                     0x08002de8   Number         0  anon$$obj.o(Region$$Table)
+    HAL_Init                                 0x0800050d   Thumb Code    36  stm32l0xx_hal.o(.text.HAL_Init)
+    HAL_InitTick                             0x08000531   Thumb Code    64  stm32l0xx_hal.o(.text.HAL_InitTick)
+    HAL_MspInit                              0x08000571   Thumb Code    24  stm32l0xx_hal_msp.o(.text.HAL_MspInit)
+    HAL_NVIC_DisableIRQ                      0x08000589   Thumb Code    32  stm32l0xx_hal_cortex.o(.text.HAL_NVIC_DisableIRQ)
+    HAL_NVIC_EnableIRQ                       0x080005a9   Thumb Code    24  stm32l0xx_hal_cortex.o(.text.HAL_NVIC_EnableIRQ)
+    HAL_NVIC_SetPriority                     0x080005c1   Thumb Code    64  stm32l0xx_hal_cortex.o(.text.HAL_NVIC_SetPriority)
+    HAL_PWR_DisableSleepOnExit               0x08000601   Thumb Code    12  stm32l0xx_hal_pwr.o(.text.HAL_PWR_DisableSleepOnExit)
+    HAL_PWR_EnableSleepOnExit                0x0800060d   Thumb Code    12  stm32l0xx_hal_pwr.o(.text.HAL_PWR_EnableSleepOnExit)
+    HAL_PWR_EnterSLEEPMode                   0x08000619   Thumb Code    92  stm32l0xx_hal_pwr.o(.text.HAL_PWR_EnterSLEEPMode)
+    HAL_RCC_ClockConfig                      0x08000675   Thumb Code   544  stm32l0xx_hal_rcc.o(.text.HAL_RCC_ClockConfig)
+    HAL_RCC_GetPCLK1Freq                     0x08000895   Thumb Code    32  stm32l0xx_hal_rcc.o(.text.HAL_RCC_GetPCLK1Freq)
+    HAL_RCC_OscConfig                        0x080008b5   Thumb Code  1292  stm32l0xx_hal_rcc.o(.text.HAL_RCC_OscConfig)
+    HAL_SYSTICK_Config                       0x08000dc1   Thumb Code    52  stm32l0xx_hal_cortex.o(.text.HAL_SYSTICK_Config)
+    HardFault_Handler                        0x08000df5   Thumb Code     2  stm32l0xx_it.o(.text.HardFault_Handler)
+    LPTIM1_IRQHandler                        0x08000df9   Thumb Code   116  main.o(.text.LPTIM1_IRQHandler)
+    NMI_Handler                              0x08000e6d   Thumb Code     2  stm32l0xx_it.o(.text.NMI_Handler)
+    PendSV_Handler                           0x08000e6f   Thumb Code     2  stm32l0xx_it.o(.text.PendSV_Handler)
+    SVC_Handler                              0x08000e71   Thumb Code     2  stm32l0xx_it.o(.text.SVC_Handler)
+    SysTick_Handler                          0x08000e75   Thumb Code   100  main.o(.text.SysTick_Handler)
+    SystemInit                               0x08000ed9   Thumb Code     2  system_stm32l0xx.o(.text.SystemInit)
+    TIM21_IRQHandler                         0x08000edd   Thumb Code    40  main.o(.text.TIM21_IRQHandler)
+    TIM2_IRQHandler                          0x08000f05   Thumb Code    32  main.o(.text.TIM2_IRQHandler)
+    USART2_IRQHandler                        0x08000f25   Thumb Code   116  uart.o(.text.USART2_IRQHandler)
+    calc_crc                                 0x08000f99   Thumb Code    44  crc.o(.text.calc_crc)
+    call_after_us                            0x08000fc5   Thumb Code    76  timing.o(.text.call_after_us)
+    call_after_us_cancel                     0x08001011   Thumb Code    36  timing.o(.text.call_after_us_cancel)
+    crc_init                                 0x08001035   Thumb Code    48  crc.o(.text.crc_init)
+    delay_ms                                 0x08001065   Thumb Code    24  timing.o(.text.delay_ms)
+    delay_us                                 0x0800107d   Thumb Code   120  timing.o(.text.delay_us)
+    fputc                                    0x080010f5   Thumb Code    20  main.o(.text.fputc)
+    gpio_init                                0x08001109   Thumb Code   256  main.o(.text.gpio_init)
+    gpio_read                                0x08001209   Thumb Code     6  gpio.o(.text.gpio_read)
+    lptim1_init                              0x08001211   Thumb Code    76  timing.o(.text.lptim1_init)
+    main                                     0x0800125d   Thumb Code  1848  main.o(.text.main)
+    nrf24_ce_low                             0x08001995   Thumb Code    12  nrf24l01.o(.text.nrf24_ce_low)
+    nrf24_flush_rx                           0x080019a1   Thumb Code    32  nrf24l01.o(.text.nrf24_flush_rx)
+    nrf24_get_pwidth                         0x080019c1   Thumb Code    44  nrf24l01.o(.text.nrf24_get_pwidth)
+    nrf24_init                               0x080019ed   Thumb Code   432  nrf24l01.o(.text.nrf24_init)
+    nrf24_listen                             0x08001b9d   Thumb Code   136  nrf24l01.o(.text.nrf24_listen)
+    nrf24_read_rxfifo                        0x08001c25   Thumb Code    68  nrf24l01.o(.text.nrf24_read_rxfifo)
+    nrf24_rx_finish                          0x08001c69   Thumb Code    48  nrf24l01.o(.text.nrf24_rx_finish)
+    nrf24_set_rxaddr                         0x08001c99   Thumb Code   112  nrf24l01.o(.text.nrf24_set_rxaddr)
+    nrf24_set_txaddr                         0x08001d09   Thumb Code    72  nrf24l01.o(.text.nrf24_set_txaddr)
+    nrf24_set_txaddr_aa                      0x08001d51   Thumb Code   132  nrf24l01.o(.text.nrf24_set_txaddr_aa)
+    nrf24_status                             0x08001dd5   Thumb Code    44  nrf24l01.o(.text.nrf24_status)
+    nrf24_tx_finish                          0x08001e01   Thumb Code    48  nrf24l01.o(.text.nrf24_tx_finish)
+    nrf24_tx_to_addr                         0x08001e31   Thumb Code   284  nrf24l01.o(.text.nrf24_tx_to_addr)
+    nrf_get_announce_response                0x08001f4d   Thumb Code    96  gpxtend_nrf.o(.text.nrf_get_announce_response)
+    nrf_get_keepalive_response               0x08001fad   Thumb Code    68  gpxtend_nrf.o(.text.nrf_get_keepalive_response)
+    nrf_init                                 0x08001ff1   Thumb Code   104  gpxtend_nrf.o(.text.nrf_init)
+    nrf_pair                                 0x08002059   Thumb Code    84  gpxtend_nrf.o(.text.nrf_pair)
+    nrf_receive                              0x080020ad   Thumb Code   148  gpxtend_nrf.o(.text.nrf_receive)
+    nrf_send                                 0x08002141   Thumb Code    88  gpxtend_nrf.o(.text.nrf_send)
+    nrf_send_announce_response               0x08002199   Thumb Code   100  gpxtend_nrf.o(.text.nrf_send_announce_response)
+    nrf_send_keepalive_packet                0x080021fd   Thumb Code    80  gpxtend_nrf.o(.text.nrf_send_keepalive_packet)
+    nrf_set_txready                          0x0800224d   Thumb Code    12  gpxtend_nrf.o(.text.nrf_set_txready)
+    spi1_init                                0x08002259   Thumb Code    72  spi.o(.text.spi1_init)
+    spi1_rx                                  0x080022a1   Thumb Code    36  spi.o(.text.spi1_rx)
+    spi1_tx                                  0x080022c5   Thumb Code    48  spi.o(.text.spi1_tx)
+    spi1_txrx                                0x080022f5   Thumb Code    44  spi.o(.text.spi1_txrx)
+    start_btn_timer                          0x08002321   Thumb Code    28  timing.o(.text.start_btn_timer)
+    stop_btn_timer                           0x0800233d   Thumb Code    36  timing.o(.text.stop_btn_timer)
+    tim21_init                               0x08002361   Thumb Code    72  timing.o(.text.tim21_init)
+    tim2_init                                0x080023a9   Thumb Code    68  timing.o(.text.tim2_init)
+    uart2_deinit                             0x080023ed   Thumb Code    52  uart.o(.text.uart2_deinit)
+    uart2_init_rxonly                        0x08002421   Thumb Code   192  uart.o(.text.uart2_init_rxonly)
+    uart2_init_txonly_dma                    0x080024e1   Thumb Code   180  uart.o(.text.uart2_init_txonly_dma)
+    uart2_putstr_dma                         0x08002595   Thumb Code   188  uart.o(.text.uart2_putstr_dma)
+    uart2_rxtimeout_callback                 0x08002651   Thumb Code    52  uart.o(.text.uart2_rxtimeout_callback)
+    uart2_tx_dma                             0x08002685   Thumb Code   196  uart.o(.text.uart2_tx_dma)
+    user_CE_hi                               0x08002749   Thumb Code    12  main.o(.text.user_CE_hi)
+    user_CE_low                              0x08002755   Thumb Code    12  main.o(.text.user_CE_low)
+    user_CS_hi                               0x08002761   Thumb Code    12  main.o(.text.user_CS_hi)
+    user_CS_low                              0x0800276d   Thumb Code    12  main.o(.text.user_CS_low)
+    wait_for_IRQ                             0x08002779   Thumb Code   140  timing.o(.text.wait_for_IRQ)
+    __0printf$8                              0x08002805   Thumb Code    24  printf8.o(i.__0printf$8)
+    __1printf$8                              0x08002805   Thumb Code     0  printf8.o(i.__0printf$8)
+    __2printf                                0x08002805   Thumb Code     0  printf8.o(i.__0printf$8)
+    __scatterload_copy                       0x08002825   Thumb Code    14  handlers.o(i.__scatterload_copy)
+    __scatterload_null                       0x08002833   Thumb Code     2  handlers.o(i.__scatterload_null)
+    __scatterload_zeroinit                   0x08002835   Thumb Code    14  handlers.o(i.__scatterload_zeroinit)
+    AHBPrescTable                            0x08002cb8   Data          16  system_stm32l0xx.o(.rodata.AHBPrescTable)
+    ANNOUNCE_ADDR                            0x08002cc8   Data           5  gpxtend_nrf.o(.rodata.ANNOUNCE_ADDR)
+    APBPrescTable                            0x08002ccd   Data           8  system_stm32l0xx.o(.rodata.APBPrescTable)
+    PLLMulTable                              0x08002cd5   Data           9  system_stm32l0xx.o(.rodata.PLLMulTable)
+    spi                                      0x08002cec   Data          28  gpxtend_nrf.o(.rodata.spi)
+    Region$$Table$$Base                      0x08002da0   Number         0  anon$$obj.o(Region$$Table)
+    Region$$Table$$Limit                     0x08002dc0   Number         0  anon$$obj.o(Region$$Table)
     __stdout                                 0x20000000   Data           4  stdout.o(.data)
     SystemCoreClock                          0x20000004   Data           4  system_stm32l0xx.o(.data.SystemCoreClock)
     tx_ready                                 0x20000008   Data           4  gpxtend_nrf.o(.data.tx_ready)
@@ -1765,170 +1766,170 @@ Memory Map of the image
 
   Image Entry point : 0x080000c1
 
-  Load Region LR_IROM1 (Base: 0x08000000, Size: 0x00002e00, Max: 0x00004000, ABSOLUTE)
+  Load Region LR_IROM1 (Base: 0x08000000, Size: 0x00002dd8, Max: 0x00004000, ABSOLUTE)
 
-    Execution Region ER_IROM1 (Exec base: 0x08000000, Load base: 0x08000000, Size: 0x00002de8, Max: 0x00004000, ABSOLUTE)
+    Execution Region ER_IROM1 (Exec base: 0x08000000, Load base: 0x08000000, Size: 0x00002dc0, Max: 0x00004000, ABSOLUTE)
 
     Exec Addr    Load Addr    Size         Type   Attr      Idx    E Section Name        Object
 
     0x08000000   0x08000000   0x000000c0   Data   RO            3    RESET               startup_stm32l011xx.o
-    0x080000c0   0x080000c0   0x00000000   Code   RO          637  * .ARM.Collect$$$$00000000  mc_p.l(entry.o)
-    0x080000c0   0x080000c0   0x00000004   Code   RO          915    .ARM.Collect$$$$00000001  mc_p.l(entry2.o)
-    0x080000c4   0x080000c4   0x00000004   Code   RO          918    .ARM.Collect$$$$00000004  mc_p.l(entry5.o)
-    0x080000c8   0x080000c8   0x00000000   Code   RO          920    .ARM.Collect$$$$00000008  mc_p.l(entry7b.o)
-    0x080000c8   0x080000c8   0x00000000   Code   RO          922    .ARM.Collect$$$$0000000A  mc_p.l(entry8b.o)
-    0x080000c8   0x080000c8   0x00000008   Code   RO          923    .ARM.Collect$$$$0000000B  mc_p.l(entry9a.o)
-    0x080000d0   0x080000d0   0x00000000   Code   RO          925    .ARM.Collect$$$$0000000D  mc_p.l(entry10a.o)
-    0x080000d0   0x080000d0   0x00000000   Code   RO          927    .ARM.Collect$$$$0000000F  mc_p.l(entry11a.o)
-    0x080000d0   0x080000d0   0x00000004   Code   RO          916    .ARM.Collect$$$$00002712  mc_p.l(entry2.o)
+    0x080000c0   0x080000c0   0x00000000   Code   RO          488  * .ARM.Collect$$$$00000000  mc_p.l(entry.o)
+    0x080000c0   0x080000c0   0x00000004   Code   RO          629    .ARM.Collect$$$$00000001  mc_p.l(entry2.o)
+    0x080000c4   0x080000c4   0x00000004   Code   RO          632    .ARM.Collect$$$$00000004  mc_p.l(entry5.o)
+    0x080000c8   0x080000c8   0x00000000   Code   RO          634    .ARM.Collect$$$$00000008  mc_p.l(entry7b.o)
+    0x080000c8   0x080000c8   0x00000000   Code   RO          636    .ARM.Collect$$$$0000000A  mc_p.l(entry8b.o)
+    0x080000c8   0x080000c8   0x00000008   Code   RO          637    .ARM.Collect$$$$0000000B  mc_p.l(entry9a.o)
+    0x080000d0   0x080000d0   0x00000000   Code   RO          639    .ARM.Collect$$$$0000000D  mc_p.l(entry10a.o)
+    0x080000d0   0x080000d0   0x00000000   Code   RO          641    .ARM.Collect$$$$0000000F  mc_p.l(entry11a.o)
+    0x080000d0   0x080000d0   0x00000004   Code   RO          630    .ARM.Collect$$$$00002712  mc_p.l(entry2.o)
     0x080000d4   0x080000d4   0x00000058   Code   RO            4    .text               startup_stm32l011xx.o
-    0x0800012c   0x0800012c   0x00000024   Code   RO          646    .text               mc_p.l(memcpya.o)
-    0x08000150   0x08000150   0x0000000e   Code   RO          648    .text               mc_p.l(strlen.o)
-    0x0800015e   0x0800015e   0x0000001a   Code   RO          650    .text               mc_p.l(memcmp.o)
-    0x08000178   0x08000178   0x0000003e   Code   RO          934    .text               mc_p.l(uidiv_div0.o)
-    0x080001b6   0x080001b6   0x00000060   Code   RO          940    .text               mc_p.l(uldiv.o)
+    0x0800012c   0x0800012c   0x00000024   Code   RO          494    .text               mc_p.l(memcpya.o)
+    0x08000150   0x08000150   0x0000000e   Code   RO          495    .text               mc_p.l(strlen.o)
+    0x0800015e   0x0800015e   0x0000001a   Code   RO          496    .text               mc_p.l(memcmp.o)
+    0x08000178   0x08000178   0x0000003e   Code   RO          646    .text               mc_p.l(uidiv_div0.o)
+    0x080001b6   0x080001b6   0x00000060   Code   RO          649    .text               mc_p.l(uldiv.o)
     0x08000216   0x08000216   0x00000002   PAD
-    0x08000218   0x08000218   0x00000024   Code   RO          953    .text               mc_p.l(init.o)
-    0x0800023c   0x0800023c   0x00000020   Code   RO          955    .text               mc_p.l(llshl.o)
-    0x0800025c   0x0800025c   0x00000022   Code   RO          957    .text               mc_p.l(llushr.o)
+    0x08000218   0x08000218   0x00000024   Code   RO          656    .text               mc_p.l(init.o)
+    0x0800023c   0x0800023c   0x00000020   Code   RO          657    .text               mc_p.l(llshl.o)
+    0x0800025c   0x0800025c   0x00000022   Code   RO          658    .text               mc_p.l(llushr.o)
     0x0800027e   0x0800027e   0x00000002   PAD
-    0x08000280   0x08000280   0x0000007c   Code   RO          105    .text.DMA1_Channel4_5_IRQHandler  uart.o
-    0x080002fc   0x080002fc   0x00000028   Code   RO           35    .text.EXTI0_1_IRQHandler  main.o
-    0x08000324   0x08000324   0x00000028   Code   RO           37    .text.EXTI4_15_IRQHandler  main.o
-    0x0800034c   0x0800034c   0x00000194   Code   RO          502    .text.HAL_GPIO_Init  stm32l0xx_hal_gpio.o
-    0x080004e0   0x080004e0   0x00000010   Code   RO          508    .text.HAL_GPIO_WritePin  stm32l0xx_hal_gpio.o
-    0x080004f0   0x080004f0   0x00000008   Code   RO          298    .text.HAL_GetTick   stm32l0xx_hal.o
-    0x080004f8   0x080004f8   0x00000014   Code   RO          296    .text.HAL_IncTick   stm32l0xx_hal.o
-    0x0800050c   0x0800050c   0x00000028   Code   RO          286    .text.HAL_Init      stm32l0xx_hal.o
-    0x08000534   0x08000534   0x00000040   Code   RO          288    .text.HAL_InitTick  stm32l0xx_hal.o
-    0x08000574   0x08000574   0x00000018   Code   RO           87    .text.HAL_MspInit   stm32l0xx_hal_msp.o
-    0x0800058c   0x0800058c   0x00000020   Code   RO          594    .text.HAL_NVIC_DisableIRQ  stm32l0xx_hal_cortex.o
-    0x080005ac   0x080005ac   0x00000018   Code   RO          592    .text.HAL_NVIC_EnableIRQ  stm32l0xx_hal_cortex.o
-    0x080005c4   0x080005c4   0x00000040   Code   RO          590    .text.HAL_NVIC_SetPriority  stm32l0xx_hal_cortex.o
-    0x08000604   0x08000604   0x0000000c   Code   RO          550    .text.HAL_PWR_DisableSleepOnExit  stm32l0xx_hal_pwr.o
-    0x08000610   0x08000610   0x0000000c   Code   RO          548    .text.HAL_PWR_EnableSleepOnExit  stm32l0xx_hal_pwr.o
-    0x0800061c   0x0800061c   0x0000005c   Code   RO          542    .text.HAL_PWR_EnterSLEEPMode  stm32l0xx_hal_pwr.o
-    0x08000678   0x08000678   0x00000220   Code   RO          365    .text.HAL_RCC_ClockConfig  stm32l0xx_hal_rcc.o
-    0x08000898   0x08000898   0x00000020   Code   RO          371    .text.HAL_RCC_GetPCLK1Freq  stm32l0xx_hal_rcc.o
-    0x080008b8   0x080008b8   0x0000050c   Code   RO          361    .text.HAL_RCC_OscConfig  stm32l0xx_hal_rcc.o
-    0x08000dc4   0x08000dc4   0x00000034   Code   RO          598    .text.HAL_SYSTICK_Config  stm32l0xx_hal_cortex.o
-    0x08000df8   0x08000df8   0x00000002   Code   RO           74    .text.HardFault_Handler  stm32l0xx_it.o
-    0x08000dfa   0x08000dfa   0x00000002   PAD
-    0x08000dfc   0x08000dfc   0x00000074   Code   RO           43    .text.LPTIM1_IRQHandler  main.o
-    0x08000e70   0x08000e70   0x00000002   Code   RO           72    .text.NMI_Handler   stm32l0xx_it.o
-    0x08000e72   0x08000e72   0x00000002   Code   RO           78    .text.PendSV_Handler  stm32l0xx_it.o
-    0x08000e74   0x08000e74   0x00000002   Code   RO           76    .text.SVC_Handler   stm32l0xx_it.o
-    0x08000e76   0x08000e76   0x00000002   PAD
-    0x08000e78   0x08000e78   0x00000064   Code   RO           45    .text.SysTick_Handler  main.o
-    0x08000edc   0x08000edc   0x00000002   Code   RO          622    .text.SystemInit    system_stm32l0xx.o
-    0x08000ede   0x08000ede   0x00000002   PAD
-    0x08000ee0   0x08000ee0   0x00000028   Code   RO           41    .text.TIM21_IRQHandler  main.o
-    0x08000f08   0x08000f08   0x00000020   Code   RO           39    .text.TIM2_IRQHandler  main.o
-    0x08000f28   0x08000f28   0x00000074   Code   RO          107    .text.USART2_IRQHandler  uart.o
-    0x08000f9c   0x08000f9c   0x0000002c   Code   RO          260    .text.calc_crc      crc.o
-    0x08000fc8   0x08000fc8   0x0000004c   Code   RO          246    .text.call_after_us  timing.o
-    0x08001014   0x08001014   0x00000024   Code   RO          240    .text.call_after_us_cancel  timing.o
-    0x08001038   0x08001038   0x00000030   Code   RO          258    .text.crc_init      crc.o
-    0x08001068   0x08001068   0x00000018   Code   RO          244    .text.delay_ms      timing.o
-    0x08001080   0x08001080   0x00000078   Code   RO          242    .text.delay_us      timing.o
-    0x080010f8   0x080010f8   0x00000014   Code   RO           47    .text.fputc         main.o
-    0x0800110c   0x0800110c   0x00000100   Code   RO           15    .text.gpio_init     main.o
-    0x0800120c   0x0800120c   0x00000006   Code   RO          274    .text.gpio_read     gpio.o
-    0x08001212   0x08001212   0x00000002   PAD
-    0x08001214   0x08001214   0x0000004c   Code   RO          234    .text.lptim1_init   timing.o
-    0x08001260   0x08001260   0x00000760   Code   RO           11    .text.main          main.o
-    0x080019c0   0x080019c0   0x0000000c   Code   RO          177    .text.nrf24_ce_low  nrf24l01.o
-    0x080019cc   0x080019cc   0x00000020   Code   RO          157    .text.nrf24_flush_rx  nrf24l01.o
-    0x080019ec   0x080019ec   0x0000002c   Code   RO          195    .text.nrf24_get_pwidth  nrf24l01.o
-    0x08001a18   0x08001a18   0x000001b0   Code   RO          151    .text.nrf24_init    nrf24l01.o
-    0x08001bc8   0x08001bc8   0x00000088   Code   RO          155    .text.nrf24_listen  nrf24l01.o
-    0x08001c50   0x08001c50   0x00000044   Code   RO          193    .text.nrf24_read_rxfifo  nrf24l01.o
-    0x08001c94   0x08001c94   0x00000030   Code   RO          187    .text.nrf24_rx_finish  nrf24l01.o
-    0x08001cc4   0x08001cc4   0x00000070   Code   RO          163    .text.nrf24_set_rxaddr  nrf24l01.o
-    0x08001d34   0x08001d34   0x00000048   Code   RO          159    .text.nrf24_set_txaddr  nrf24l01.o
-    0x08001d7c   0x08001d7c   0x00000084   Code   RO          161    .text.nrf24_set_txaddr_aa  nrf24l01.o
-    0x08001e00   0x08001e00   0x0000002c   Code   RO          183    .text.nrf24_status  nrf24l01.o
-    0x08001e2c   0x08001e2c   0x00000030   Code   RO          185    .text.nrf24_tx_finish  nrf24l01.o
-    0x08001e5c   0x08001e5c   0x0000011c   Code   RO          179    .text.nrf24_tx_to_addr  nrf24l01.o
-    0x08001f78   0x08001f78   0x00000060   Code   RO          133    .text.nrf_get_announce_response  gpxtend_nrf.o
-    0x08001fd8   0x08001fd8   0x00000044   Code   RO          137    .text.nrf_get_keepalive_response  gpxtend_nrf.o
-    0x0800201c   0x0800201c   0x00000068   Code   RO          121    .text.nrf_init      gpxtend_nrf.o
-    0x08002084   0x08002084   0x00000054   Code   RO          129    .text.nrf_pair      gpxtend_nrf.o
-    0x080020d8   0x080020d8   0x00000094   Code   RO          123    .text.nrf_receive   gpxtend_nrf.o
-    0x0800216c   0x0800216c   0x00000058   Code   RO          127    .text.nrf_send      gpxtend_nrf.o
-    0x080021c4   0x080021c4   0x00000064   Code   RO          131    .text.nrf_send_announce_response  gpxtend_nrf.o
-    0x08002228   0x08002228   0x00000050   Code   RO          135    .text.nrf_send_keepalive_packet  gpxtend_nrf.o
-    0x08002278   0x08002278   0x0000000c   Code   RO          125    .text.nrf_set_txready  gpxtend_nrf.o
-    0x08002284   0x08002284   0x00000048   Code   RO          214    .text.spi1_init     spi.o
-    0x080022cc   0x080022cc   0x00000024   Code   RO          218    .text.spi1_rx       spi.o
-    0x080022f0   0x080022f0   0x00000030   Code   RO          216    .text.spi1_tx       spi.o
-    0x08002320   0x08002320   0x0000002c   Code   RO          220    .text.spi1_txrx     spi.o
-    0x0800234c   0x0800234c   0x0000001c   Code   RO          236    .text.start_btn_timer  timing.o
-    0x08002368   0x08002368   0x00000024   Code   RO          238    .text.stop_btn_timer  timing.o
-    0x0800238c   0x0800238c   0x00000048   Code   RO          232    .text.tim21_init    timing.o
-    0x080023d4   0x080023d4   0x00000044   Code   RO          230    .text.tim2_init     timing.o
-    0x08002418   0x08002418   0x00000034   Code   RO           99    .text.uart2_deinit  uart.o
-    0x0800244c   0x0800244c   0x000000bc   Code   RO           95    .text.uart2_init_rxonly  uart.o
-    0x08002508   0x08002508   0x000000b4   Code   RO           97    .text.uart2_init_txonly_dma  uart.o
-    0x080025bc   0x080025bc   0x000000bc   Code   RO          101    .text.uart2_putstr_dma  uart.o
-    0x08002678   0x08002678   0x00000034   Code   RO          111    .text.uart2_rxtimeout_callback  uart.o
-    0x080026ac   0x080026ac   0x000000c4   Code   RO          103    .text.uart2_tx_dma  uart.o
-    0x08002770   0x08002770   0x0000000c   Code   RO           31    .text.user_CE_hi    main.o
-    0x0800277c   0x0800277c   0x0000000c   Code   RO           19    .text.user_CE_low   main.o
-    0x08002788   0x08002788   0x0000000c   Code   RO           33    .text.user_CS_hi    main.o
-    0x08002794   0x08002794   0x0000000c   Code   RO           21    .text.user_CS_low   main.o
-    0x080027a0   0x080027a0   0x0000008c   Code   RO          248    .text.wait_for_IRQ  timing.o
-    0x0800282c   0x0800282c   0x00000020   Code   RO          861    i.__0printf$8       mc_p.l(printf8.o)
-    0x0800284c   0x0800284c   0x0000000e   Code   RO          967    i.__scatterload_copy  mc_p.l(handlers.o)
-    0x0800285a   0x0800285a   0x00000002   Code   RO          968    i.__scatterload_null  mc_p.l(handlers.o)
-    0x0800285c   0x0800285c   0x0000000e   Code   RO          969    i.__scatterload_zeroinit  mc_p.l(handlers.o)
-    0x0800286a   0x0800286a   0x00000002   PAD
-    0x0800286c   0x0800286c   0x00000428   Code   RO          868    i._printf_core      mc_p.l(printf8.o)
-    0x08002c94   0x08002c94   0x00000020   Code   RO          869    i._printf_post_padding  mc_p.l(printf8.o)
-    0x08002cb4   0x08002cb4   0x0000002c   Code   RO          870    i._printf_pre_padding  mc_p.l(printf8.o)
-    0x08002ce0   0x08002ce0   0x00000010   Data   RO          627    .rodata.AHBPrescTable  system_stm32l0xx.o
-    0x08002cf0   0x08002cf0   0x00000005   Data   RO          139    .rodata.ANNOUNCE_ADDR  gpxtend_nrf.o
-    0x08002cf5   0x08002cf5   0x00000008   Data   RO          628    .rodata.APBPrescTable  system_stm32l0xx.o
-    0x08002cfd   0x08002cfd   0x00000009   Data   RO          629    .rodata.PLLMulTable  system_stm32l0xx.o
-    0x08002d06   0x08002d06   0x0000000e   Data   RO          142    .rodata.nrf_config  gpxtend_nrf.o
-    0x08002d14   0x08002d14   0x0000001c   Data   RO          141    .rodata.spi         gpxtend_nrf.o
-    0x08002d30   0x08002d30   0x00000096   Data   RO           55    .rodata.str1.1      main.o
-    0x08002dc6   0x08002dc6   0x00000002   PAD
-    0x08002dc8   0x08002dc8   0x00000020   Data   RO          966    Region$$Table       anon$$obj.o
+    0x08000280   0x08000280   0x0000007c   Code   RO           82    .text.DMA1_Channel4_5_IRQHandler  uart.o
+    0x080002fc   0x080002fc   0x00000028   Code   RO           30    .text.EXTI0_1_IRQHandler  main.o
+    0x08000324   0x08000324   0x00000028   Code   RO           32    .text.EXTI4_15_IRQHandler  main.o
+    0x0800034c   0x0800034c   0x00000194   Code   RO          388    .text.HAL_GPIO_Init  stm32l0xx_hal_gpio.o
+    0x080004e0   0x080004e0   0x00000010   Code   RO          394    .text.HAL_GPIO_WritePin  stm32l0xx_hal_gpio.o
+    0x080004f0   0x080004f0   0x00000008   Code   RO          226    .text.HAL_GetTick   stm32l0xx_hal.o
+    0x080004f8   0x080004f8   0x00000014   Code   RO          224    .text.HAL_IncTick   stm32l0xx_hal.o
+    0x0800050c   0x0800050c   0x00000024   Code   RO          214    .text.HAL_Init      stm32l0xx_hal.o
+    0x08000530   0x08000530   0x00000040   Code   RO          216    .text.HAL_InitTick  stm32l0xx_hal.o
+    0x08000570   0x08000570   0x00000018   Code   RO           69    .text.HAL_MspInit   stm32l0xx_hal_msp.o
+    0x08000588   0x08000588   0x00000020   Code   RO          459    .text.HAL_NVIC_DisableIRQ  stm32l0xx_hal_cortex.o
+    0x080005a8   0x080005a8   0x00000018   Code   RO          457    .text.HAL_NVIC_EnableIRQ  stm32l0xx_hal_cortex.o
+    0x080005c0   0x080005c0   0x00000040   Code   RO          455    .text.HAL_NVIC_SetPriority  stm32l0xx_hal_cortex.o
+    0x08000600   0x08000600   0x0000000c   Code   RO          429    .text.HAL_PWR_DisableSleepOnExit  stm32l0xx_hal_pwr.o
+    0x0800060c   0x0800060c   0x0000000c   Code   RO          427    .text.HAL_PWR_EnableSleepOnExit  stm32l0xx_hal_pwr.o
+    0x08000618   0x08000618   0x0000005c   Code   RO          421    .text.HAL_PWR_EnterSLEEPMode  stm32l0xx_hal_pwr.o
+    0x08000674   0x08000674   0x00000220   Code   RO          286    .text.HAL_RCC_ClockConfig  stm32l0xx_hal_rcc.o
+    0x08000894   0x08000894   0x00000020   Code   RO          292    .text.HAL_RCC_GetPCLK1Freq  stm32l0xx_hal_rcc.o
+    0x080008b4   0x080008b4   0x0000050c   Code   RO          282    .text.HAL_RCC_OscConfig  stm32l0xx_hal_rcc.o
+    0x08000dc0   0x08000dc0   0x00000034   Code   RO          463    .text.HAL_SYSTICK_Config  stm32l0xx_hal_cortex.o
+    0x08000df4   0x08000df4   0x00000002   Code   RO           62    .text.HardFault_Handler  stm32l0xx_it.o
+    0x08000df6   0x08000df6   0x00000002   PAD
+    0x08000df8   0x08000df8   0x00000074   Code   RO           38    .text.LPTIM1_IRQHandler  main.o
+    0x08000e6c   0x08000e6c   0x00000002   Code   RO           60    .text.NMI_Handler   stm32l0xx_it.o
+    0x08000e6e   0x08000e6e   0x00000002   Code   RO           66    .text.PendSV_Handler  stm32l0xx_it.o
+    0x08000e70   0x08000e70   0x00000002   Code   RO           64    .text.SVC_Handler   stm32l0xx_it.o
+    0x08000e72   0x08000e72   0x00000002   PAD
+    0x08000e74   0x08000e74   0x00000064   Code   RO           40    .text.SysTick_Handler  main.o
+    0x08000ed8   0x08000ed8   0x00000002   Code   RO          480    .text.SystemInit    system_stm32l0xx.o
+    0x08000eda   0x08000eda   0x00000002   PAD
+    0x08000edc   0x08000edc   0x00000028   Code   RO           36    .text.TIM21_IRQHandler  main.o
+    0x08000f04   0x08000f04   0x00000020   Code   RO           34    .text.TIM2_IRQHandler  main.o
+    0x08000f24   0x08000f24   0x00000074   Code   RO           84    .text.USART2_IRQHandler  uart.o
+    0x08000f98   0x08000f98   0x0000002c   Code   RO          202    .text.calc_crc      crc.o
+    0x08000fc4   0x08000fc4   0x0000004c   Code   RO          195    .text.call_after_us  timing.o
+    0x08001010   0x08001010   0x00000024   Code   RO          189    .text.call_after_us_cancel  timing.o
+    0x08001034   0x08001034   0x00000030   Code   RO          200    .text.crc_init      crc.o
+    0x08001064   0x08001064   0x00000018   Code   RO          193    .text.delay_ms      timing.o
+    0x0800107c   0x0800107c   0x00000078   Code   RO          191    .text.delay_us      timing.o
+    0x080010f4   0x080010f4   0x00000014   Code   RO           42    .text.fputc         main.o
+    0x08001108   0x08001108   0x00000100   Code   RO           10    .text.gpio_init     main.o
+    0x08001208   0x08001208   0x00000006   Code   RO          209    .text.gpio_read     gpio.o
+    0x0800120e   0x0800120e   0x00000002   PAD
+    0x08001210   0x08001210   0x0000004c   Code   RO          183    .text.lptim1_init   timing.o
+    0x0800125c   0x0800125c   0x00000738   Code   RO            6    .text.main          main.o
+    0x08001994   0x08001994   0x0000000c   Code   RO          140    .text.nrf24_ce_low  nrf24l01.o
+    0x080019a0   0x080019a0   0x00000020   Code   RO          120    .text.nrf24_flush_rx  nrf24l01.o
+    0x080019c0   0x080019c0   0x0000002c   Code   RO          158    .text.nrf24_get_pwidth  nrf24l01.o
+    0x080019ec   0x080019ec   0x000001b0   Code   RO          114    .text.nrf24_init    nrf24l01.o
+    0x08001b9c   0x08001b9c   0x00000088   Code   RO          118    .text.nrf24_listen  nrf24l01.o
+    0x08001c24   0x08001c24   0x00000044   Code   RO          156    .text.nrf24_read_rxfifo  nrf24l01.o
+    0x08001c68   0x08001c68   0x00000030   Code   RO          150    .text.nrf24_rx_finish  nrf24l01.o
+    0x08001c98   0x08001c98   0x00000070   Code   RO          126    .text.nrf24_set_rxaddr  nrf24l01.o
+    0x08001d08   0x08001d08   0x00000048   Code   RO          122    .text.nrf24_set_txaddr  nrf24l01.o
+    0x08001d50   0x08001d50   0x00000084   Code   RO          124    .text.nrf24_set_txaddr_aa  nrf24l01.o
+    0x08001dd4   0x08001dd4   0x0000002c   Code   RO          146    .text.nrf24_status  nrf24l01.o
+    0x08001e00   0x08001e00   0x00000030   Code   RO          148    .text.nrf24_tx_finish  nrf24l01.o
+    0x08001e30   0x08001e30   0x0000011c   Code   RO          142    .text.nrf24_tx_to_addr  nrf24l01.o
+    0x08001f4c   0x08001f4c   0x00000060   Code   RO          103    .text.nrf_get_announce_response  gpxtend_nrf.o
+    0x08001fac   0x08001fac   0x00000044   Code   RO          107    .text.nrf_get_keepalive_response  gpxtend_nrf.o
+    0x08001ff0   0x08001ff0   0x00000068   Code   RO           91    .text.nrf_init      gpxtend_nrf.o
+    0x08002058   0x08002058   0x00000054   Code   RO           99    .text.nrf_pair      gpxtend_nrf.o
+    0x080020ac   0x080020ac   0x00000094   Code   RO           93    .text.nrf_receive   gpxtend_nrf.o
+    0x08002140   0x08002140   0x00000058   Code   RO           97    .text.nrf_send      gpxtend_nrf.o
+    0x08002198   0x08002198   0x00000064   Code   RO          101    .text.nrf_send_announce_response  gpxtend_nrf.o
+    0x080021fc   0x080021fc   0x00000050   Code   RO          105    .text.nrf_send_keepalive_packet  gpxtend_nrf.o
+    0x0800224c   0x0800224c   0x0000000c   Code   RO           95    .text.nrf_set_txready  gpxtend_nrf.o
+    0x08002258   0x08002258   0x00000048   Code   RO          170    .text.spi1_init     spi.o
+    0x080022a0   0x080022a0   0x00000024   Code   RO          174    .text.spi1_rx       spi.o
+    0x080022c4   0x080022c4   0x00000030   Code   RO          172    .text.spi1_tx       spi.o
+    0x080022f4   0x080022f4   0x0000002c   Code   RO          176    .text.spi1_txrx     spi.o
+    0x08002320   0x08002320   0x0000001c   Code   RO          185    .text.start_btn_timer  timing.o
+    0x0800233c   0x0800233c   0x00000024   Code   RO          187    .text.stop_btn_timer  timing.o
+    0x08002360   0x08002360   0x00000048   Code   RO          181    .text.tim21_init    timing.o
+    0x080023a8   0x080023a8   0x00000044   Code   RO          179    .text.tim2_init     timing.o
+    0x080023ec   0x080023ec   0x00000034   Code   RO           76    .text.uart2_deinit  uart.o
+    0x08002420   0x08002420   0x000000c0   Code   RO           72    .text.uart2_init_rxonly  uart.o
+    0x080024e0   0x080024e0   0x000000b4   Code   RO           74    .text.uart2_init_txonly_dma  uart.o
+    0x08002594   0x08002594   0x000000bc   Code   RO           78    .text.uart2_putstr_dma  uart.o
+    0x08002650   0x08002650   0x00000034   Code   RO           88    .text.uart2_rxtimeout_callback  uart.o
+    0x08002684   0x08002684   0x000000c4   Code   RO           80    .text.uart2_tx_dma  uart.o
+    0x08002748   0x08002748   0x0000000c   Code   RO           26    .text.user_CE_hi    main.o
+    0x08002754   0x08002754   0x0000000c   Code   RO           14    .text.user_CE_low   main.o
+    0x08002760   0x08002760   0x0000000c   Code   RO           28    .text.user_CS_hi    main.o
+    0x0800276c   0x0800276c   0x0000000c   Code   RO           16    .text.user_CS_low   main.o
+    0x08002778   0x08002778   0x0000008c   Code   RO          197    .text.wait_for_IRQ  timing.o
+    0x08002804   0x08002804   0x00000020   Code   RO          602    i.__0printf$8       mc_p.l(printf8.o)
+    0x08002824   0x08002824   0x0000000e   Code   RO          665    i.__scatterload_copy  mc_p.l(handlers.o)
+    0x08002832   0x08002832   0x00000002   Code   RO          666    i.__scatterload_null  mc_p.l(handlers.o)
+    0x08002834   0x08002834   0x0000000e   Code   RO          667    i.__scatterload_zeroinit  mc_p.l(handlers.o)
+    0x08002842   0x08002842   0x00000002   PAD
+    0x08002844   0x08002844   0x00000428   Code   RO          609    i._printf_core      mc_p.l(printf8.o)
+    0x08002c6c   0x08002c6c   0x00000020   Code   RO          610    i._printf_post_padding  mc_p.l(printf8.o)
+    0x08002c8c   0x08002c8c   0x0000002c   Code   RO          611    i._printf_pre_padding  mc_p.l(printf8.o)
+    0x08002cb8   0x08002cb8   0x00000010   Data   RO          485    .rodata.AHBPrescTable  system_stm32l0xx.o
+    0x08002cc8   0x08002cc8   0x00000005   Data   RO          109    .rodata.ANNOUNCE_ADDR  gpxtend_nrf.o
+    0x08002ccd   0x08002ccd   0x00000008   Data   RO          486    .rodata.APBPrescTable  system_stm32l0xx.o
+    0x08002cd5   0x08002cd5   0x00000009   Data   RO          487    .rodata.PLLMulTable  system_stm32l0xx.o
+    0x08002cde   0x08002cde   0x0000000e   Data   RO          112    .rodata.nrf_config  gpxtend_nrf.o
+    0x08002cec   0x08002cec   0x0000001c   Data   RO          111    .rodata.spi         gpxtend_nrf.o
+    0x08002d08   0x08002d08   0x00000096   Data   RO           50    .rodata.str1.1      main.o
+    0x08002d9e   0x08002d9e   0x00000002   PAD
+    0x08002da0   0x08002da0   0x00000020   Data   RO          664    Region$$Table       anon$$obj.o
 
 
-    Execution Region RW_IRAM1 (Exec base: 0x20000000, Load base: 0x08002de8, Size: 0x000005e8, Max: 0x00000800, ABSOLUTE)
+    Execution Region RW_IRAM1 (Exec base: 0x20000000, Load base: 0x08002dc0, Size: 0x000005e8, Max: 0x00000800, ABSOLUTE)
 
     Exec Addr    Load Addr    Size         Type   Attr      Idx    E Section Name        Object
 
-    0x20000000   0x08002de8   0x00000004   Data   RW          929    .data               mc_p.l(stdout.o)
-    0x20000004   0x08002dec   0x00000004   Data   RW          626    .data.SystemCoreClock  system_stm32l0xx.o
-    0x20000008   0x08002df0   0x00000004   Data   RW          140    .data.tx_ready      gpxtend_nrf.o
-    0x2000000c   0x08002df4   0x00000001   Data   RW          349    .data.uwTickFreq    stm32l0xx_hal.o
-    0x2000000d   0x08002df5   0x00000003   PAD
-    0x20000010   0x08002df8   0x00000004   Data   RW          348    .data.uwTickPrio    stm32l0xx_hal.o
-    0x20000014   0x08002dfc   0x00000004   PAD
-    0x20000018        -       0x00000001   Zero   RW          203    .bss.base_config    nrf24l01.o
-    0x20000019   0x08002dfc   0x00000003   PAD
-    0x2000001c        -       0x00000004   Zero   RW           52    .bss.btn_timer_active  main.o
-    0x20000020        -       0x00000004   Zero   RW           57    .bss.delayed_callback  main.o
-    0x20000024        -       0x00000005   Zero   RW           49    .bss.device_addr    main.o
-    0x20000029   0x08002dfc   0x00000003   PAD
-    0x2000002c        -       0x00000004   Zero   RW           61    .bss.green_ontime   main.o
-    0x20000030        -       0x00000005   Zero   RW          205    .bss.last_p0_addr   nrf24l01.o
-    0x20000035        -       0x00000005   Zero   RW          204    .bss.last_tx_addr   nrf24l01.o
-    0x2000003a   0x08002dfc   0x00000002   PAD
-    0x2000003c        -       0x00000004   Zero   RW           62    .bss.ms_since_last_tx  main.o
-    0x20000040        -       0x00000004   Zero   RW           50    .bss.nrf_irq_flag   main.o
-    0x20000044        -       0x00000004   Zero   RW           56    .bss.pair_btn       main.o
-    0x20000048        -       0x00000004   Zero   RW           59    .bss.pressed_time   main.o
-    0x2000004c        -       0x00000004   Zero   RW           60    .bss.red_ontime     main.o
-    0x20000050        -       0x00000004   Zero   RW           58    .bss.released_time  main.o
-    0x20000054        -       0x00000001   Zero   RW           53    .bss.side           main.o
-    0x20000055   0x08002dfc   0x00000003   PAD
-    0x20000058        -       0x00000004   Zero   RW           51    .bss.tim2_flag      main.o
-    0x2000005c        -       0x00000188   Zero   RW           54    .bss.uart2          main.o
-    0x200001e4        -       0x00000004   Zero   RW          350    .bss.uwTick         stm32l0xx_hal.o
+    0x20000000   0x08002dc0   0x00000004   Data   RW          643    .data               mc_p.l(stdout.o)
+    0x20000004   0x08002dc4   0x00000004   Data   RW          484    .data.SystemCoreClock  system_stm32l0xx.o
+    0x20000008   0x08002dc8   0x00000004   Data   RW          110    .data.tx_ready      gpxtend_nrf.o
+    0x2000000c   0x08002dcc   0x00000001   Data   RW          277    .data.uwTickFreq    stm32l0xx_hal.o
+    0x2000000d   0x08002dcd   0x00000003   PAD
+    0x20000010   0x08002dd0   0x00000004   Data   RW          276    .data.uwTickPrio    stm32l0xx_hal.o
+    0x20000014   0x08002dd4   0x00000004   PAD
+    0x20000018        -       0x00000001   Zero   RW          166    .bss.base_config    nrf24l01.o
+    0x20000019   0x08002dd4   0x00000003   PAD
+    0x2000001c        -       0x00000004   Zero   RW           47    .bss.btn_timer_active  main.o
+    0x20000020        -       0x00000004   Zero   RW           52    .bss.delayed_callback  main.o
+    0x20000024        -       0x00000005   Zero   RW           44    .bss.device_addr    main.o
+    0x20000029   0x08002dd4   0x00000003   PAD
+    0x2000002c        -       0x00000004   Zero   RW           56    .bss.green_ontime   main.o
+    0x20000030        -       0x00000005   Zero   RW          168    .bss.last_p0_addr   nrf24l01.o
+    0x20000035        -       0x00000005   Zero   RW          167    .bss.last_tx_addr   nrf24l01.o
+    0x2000003a   0x08002dd4   0x00000002   PAD
+    0x2000003c        -       0x00000004   Zero   RW           57    .bss.ms_since_last_tx  main.o
+    0x20000040        -       0x00000004   Zero   RW           45    .bss.nrf_irq_flag   main.o
+    0x20000044        -       0x00000004   Zero   RW           51    .bss.pair_btn       main.o
+    0x20000048        -       0x00000004   Zero   RW           54    .bss.pressed_time   main.o
+    0x2000004c        -       0x00000004   Zero   RW           55    .bss.red_ontime     main.o
+    0x20000050        -       0x00000004   Zero   RW           53    .bss.released_time  main.o
+    0x20000054        -       0x00000001   Zero   RW           48    .bss.side           main.o
+    0x20000055   0x08002dd4   0x00000003   PAD
+    0x20000058        -       0x00000004   Zero   RW           46    .bss.tim2_flag      main.o
+    0x2000005c        -       0x00000188   Zero   RW           49    .bss.uart2          main.o
+    0x200001e4        -       0x00000004   Zero   RW          278    .bss.uwTick         stm32l0xx_hal.o
     0x200001e8        -       0x00000400   Zero   RW            1    STACK               startup_stm32l011xx.o
 
 
@@ -1939,26 +1940,26 @@ Image component sizes
 
       Code (inc. data)   RO Data    RW Data    ZI Data      Debug   Object Name
 
-        92         12          0          0          0       1810   crc.o
-         6          0          0          0          0       1490   gpio.o
-       780         28         47          4          0       6273   gpxtend_nrf.o
-      2580        360        150          0        438      12954   main.o
-      1464         28          0          0         11      12127   nrf24l01.o
-       200          8          0          0          0       2875   spi.o
-        88         38        192          0       1024        628   startup_stm32l011xx.o
-       132          8          0          5          4       6703   stm32l0xx_hal.o
-       172         28          0          0          0       5437   stm32l0xx_hal_cortex.o
-       420         20          0          0          0       5167   stm32l0xx_hal_gpio.o
-        24          4          0          0          0       1122   stm32l0xx_hal_msp.o
-       116         12          0          0          0       4592   stm32l0xx_hal_pwr.o
-      1868         96          0          0          0       8851   stm32l0xx_hal_rcc.o
-         8          0          0          0          0        617   stm32l0xx_it.o
-         2          0         33          4          0       2154   system_stm32l0xx.o
-       676         56          0          0          0       3827   timing.o
-      1096         88          0          0          0       6271   uart.o
+        92         12          0          0          0          0   crc.o
+         6          0          0          0          0          0   gpio.o
+       780         28         47          4          0          0   gpxtend_nrf.o
+      2540        364        150          0        438          0   main.o
+      1464         28          0          0         11          0   nrf24l01.o
+       200          8          0          0          0          0   spi.o
+        88         38        192          0       1024          0   startup_stm32l011xx.o
+       128          8          0          5          4          0   stm32l0xx_hal.o
+       172         28          0          0          0          0   stm32l0xx_hal_cortex.o
+       420         20          0          0          0          0   stm32l0xx_hal_gpio.o
+        24          4          0          0          0          0   stm32l0xx_hal_msp.o
+       116         12          0          0          0          0   stm32l0xx_hal_pwr.o
+      1868         96          0          0          0          0   stm32l0xx_hal_rcc.o
+         8          0          0          0          0          0   stm32l0xx_it.o
+         2          0         33          4          0          0   system_stm32l0xx.o
+       676         56          0          0          0          0   timing.o
+      1100         88          0          0          0          0   uart.o
 
     ----------------------------------------------------------------------
-      9732        786        456         16       1492      82898   Object Totals
+      9692        790        456         16       1492          0   Object Totals
          0          0         32          0          0          0   (incl. Generated)
          8          0          2          3         15          0   (incl. Padding)
 
@@ -1975,29 +1976,29 @@ Image component sizes
          0          0          0          0          0          0   entry8b.o
          8          4          0          0          0          0   entry9a.o
         30          0          0          0          0          0   handlers.o
-        36          8          0          0          0         68   init.o
-        32          0          0          0          0         68   llshl.o
-        34          0          0          0          0         68   llushr.o
-        26          0          0          0          0         72   memcmp.o
-        36          0          0          0          0         60   memcpya.o
-      1172         52          0          0          0        324   printf8.o
+        36          8          0          0          0          0   init.o
+        32          0          0          0          0          0   llshl.o
+        34          0          0          0          0          0   llushr.o
+        26          0          0          0          0          0   memcmp.o
+        36          0          0          0          0          0   memcpya.o
+      1172         52          0          0          0          0   printf8.o
          0          0          0          4          0          0   stdout.o
-        14          0          0          0          0         60   strlen.o
-        62          0          0          0          0         72   uidiv_div0.o
-        96          0          0          0          0         84   uldiv.o
+        14          0          0          0          0          0   strlen.o
+        62          0          0          0          0          0   uidiv_div0.o
+        96          0          0          0          0          0   uldiv.o
 
     ----------------------------------------------------------------------
-      1564         68          0          4          0        876   Library Totals
+      1564         68          0          4          0          0   Library Totals
          6          0          0          0          0          0   (incl. Padding)
 
     ----------------------------------------------------------------------
 
       Code (inc. data)   RO Data    RW Data    ZI Data      Debug   Library Name
 
-      1558         68          0          4          0        876   mc_p.l
+      1558         68          0          4          0          0   mc_p.l
 
     ----------------------------------------------------------------------
-      1564         68          0          4          0        876   Library Totals
+      1564         68          0          4          0          0   Library Totals
 
     ----------------------------------------------------------------------
 
@@ -2006,15 +2007,15 @@ Image component sizes
 
       Code (inc. data)   RO Data    RW Data    ZI Data      Debug   
 
-     11296        854        456         20       1492      83334   Grand Totals
-     11296        854        456         20       1492      83334   ELF Image Totals
-     11296        854        456         20          0          0   ROM Totals
+     11256        858        456         20       1492          0   Grand Totals
+     11256        858        456         20       1492          0   ELF Image Totals
+     11256        858        456         20          0          0   ROM Totals
 
 ==============================================================================
 
-    Total RO  Size (Code + RO Data)                11752 (  11.48kB)
+    Total RO  Size (Code + RO Data)                11712 (  11.44kB)
     Total RW  Size (RW Data + ZI Data)              1512 (   1.48kB)
-    Total ROM Size (Code + RO Data + RW Data)      11772 (  11.50kB)
+    Total ROM Size (Code + RO Data + RW Data)      11732 (  11.46kB)
 
 ==============================================================================
 

@@ -4,6 +4,7 @@
 #include <stdint.h>
 #include <string.h>
 #include <stdio.h>
+#include "extender_config.h"
 #include "main.h"
 #include "nrf24l01.h"
 #include "gpxtend_nrf.h"
@@ -29,15 +30,15 @@ const nrf24_spi_interface spi = {   .rx = spi1_rx,
                                     .CS_HIGH = user_CS_hi,
                                     .CS_LOW = user_CS_low};
 
-const static nrf24l01_config nrf_config = {  .config_reg = EN_CRC | CRCO,           // 2-byte CRC
-                                             .autoack_enable = ENAA_ALL,            // auto-ack on all pipes
-                                             .rx_addr = ERX_ALL,                    // enable RX pipes
-                                             .retransmit = ARD(0) | ARC(8),         // auto retransmit delay 250us, retransmit count 8
-                                             .rf_channel = 100,                     // 2500MHz channel chosen to avoid wifi interference
-                                             .rf_setup = RF_DR_1M | RF_PWR(1),      // 1M data range, max (0dBm)RF power for max range
-                                             .dynamic_payload = DPL_ALL,            // dynamic payload on all pipes
-                                             .feature = EN_DPL,                     // enable dynamic payload
-                                             .rx_width_p0 = 0,                      // value is ignored when using dynamic payload
+const static nrf24l01_config nrf_config = {  .config_reg = EN_CRC | CRCO,               // 2-byte CRC
+                                             .autoack_enable = ENAA_ALL,                // auto-ack on all pipes
+                                             .rx_addr = ERX_ALL,                        // enable RX pipes
+                                             .retransmit = ARD(0) | ARC(8),             // auto retransmit delay 250us, retransmit count 8
+                                             .rf_channel = RF_CHANNEL,                  // 2500MHz channel chosen to avoid wifi interference
+                                             .rf_setup = RF_DR_1M | RF_PWR(RF_POWER),   // 1M data rate, max (0dBm)RF power for max range
+                                             .dynamic_payload = DPL_ALL,                // dynamic payload on all pipes
+                                             .feature = EN_DPL,                         // enable dynamic payload
+                                             .rx_width_p0 = 0,                          // value is ignored when using dynamic payload
                                              .rx_width_p1 = 0,
                                              .rx_width_p2 = 0,
                                              .rx_width_p3 = 0,

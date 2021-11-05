@@ -7,9 +7,56 @@
 #include "stm32l0xx_hal.h"
 
 
+const static uart_config_t uart_base_config = { .baudrate = BAUD_9600, 
+                                                .databits = DATABITS_8,  
+                                                .parity   = PARITY_EVEN,
+                                                .stopbits = STOPBITS_1,
+                                                .enable_rx = 0, .enable_tx = 0,
+                                                .rxie = 0, .txie = 0,
+                                                .invert_rx = 1, .invert_tx  = 1};
+
+void uart_init(USART_TypeDef *UART, const uart_config_t *config)
+{
+    uint16_t uart_div = (uint16_t)((HAL_RCC_GetPCLK1Freq() + (config->baudrate / 2)) / config->baudrate);
+    uint32_t databits;
+    
+    switch(config->databits)
+    {
+        case DATABITS_7: databits = USART_CR1_M1; break;
+        case DATABITS_8: databits = 0; break;
+        case DATABITS_9: databits = USART_CR1_M0; break;
+    }
+    
+    uint32_t temp_cr1 =((config->enable_rx << USART_CR1_RE_Pos) |
+                        (config->enable_tx << USART_CR1_TE_Pos) | 
+                        (config->rxie << USART_CR1_RXNEIE_Pos) | 
+                        (config->txie << USART_CR1_TXEIE_Pos) | 
+                        (config->parity << USART_CR1_PS_Pos) |
+                         databits);
+    
+    
+    uint32_t temp_cr2 = (config->invert_rx << USART_CR2_RXINV_Pos) | 
+                        (config->invert_tx << USART_CR2_TXINV_Pos) | 
+                        (config->stopbits << USART_CR2_STOP_Pos);
+    
+    UART->CR1 = 0;  // disable the uart peripheral for configuration
+    
+    UART->CR1 = temp_cr1;
+    UART->CR2 = temp_cr2;
+    UART->CR3 = 0;
+    
+    UART->BRR  = uart_div;
+        
+    UART->CR1 |= USART_CR1_UE; // enable uart
+}
+
 void uart2_init_rxonly(void)
 {
     GPIO_InitTypeDef GPIO_InitStruct = {0};
+    
+    uart_config_t uart2_rxonly_config = uart_base_config;
+    uart2_rxonly_config.enable_rx = 1;
+    uart2_rxonly_config.rxie = 1;
     
     __HAL_RCC_USART2_CLK_ENABLE();
   
@@ -38,24 +85,20 @@ void uart2_init_rxonly(void)
     GPIO_InitStruct.Alternate = GPIO_AF4_USART2;
     HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-    USART2->CR1 = 0;
-    USART2->CR1 = USART_CR1_RE | USART_CR1_RXNEIE | UART_DATABITS | (UART_PARITY << USART_CR1_PS_Pos);
-    uint16_t uart_div = (uint16_t)((HAL_RCC_GetPCLK1Freq() + (BAUDRATE / 2)) / BAUDRATE);
-    USART2->BRR  = uart_div;
-    USART2->CR2 = USART_CR2_RXINV | (UART_STOPBITS << USART_CR2_STOP_Pos);
-    USART2->CR3 = 0;
+    uart_init(USART2, &uart2_rxonly_config);
     
     NVIC_SetPriority(USART2_IRQn, 0);
     NVIC_EnableIRQ(USART2_IRQn);
-    
-    USART2->CR1 |= USART_CR1_UE; 
 }
 
 
 void uart2_init_txonly_dma(void)
 {
     GPIO_InitTypeDef GPIO_InitStruct = {0};
-    
+    uart_config_t uart2_txonly_dma_config = uart_base_config;
+        
+    uart2_txonly_dma_config.enable_tx = 1;
+        
     __HAL_RCC_USART2_CLK_ENABLE();
     __HAL_RCC_DMA1_CLK_ENABLE();
   
@@ -77,12 +120,7 @@ void uart2_init_txonly_dma(void)
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
     HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
     
-    USART2->CR1 = 0;
-    USART2->CR1 = USART_CR1_TE | UART_DATABITS;
-    uint16_t uart_div = (uint16_t)((HAL_RCC_GetPCLK1Freq() + (BAUDRATE / 2)) / BAUDRATE);
-    USART2->BRR  = uart_div;
-    USART2->CR2 = USART_CR2_TXINV;
-    USART2->CR3 = 0;
+    uart_init(USART2, &uart2_txonly_dma_config);
     
     // configure DMA
     DMA1_CSELR->CSELR = (0x04U << DMA_CSELR_C4S_Pos);
@@ -112,27 +150,35 @@ void uart2_putstr_dma(const char *data)
 
 void uart2_tx_dma(const uint8_t *data, uint_fast16_t length)
 {
-    uint8_t *txbuf = uart2.txbuf[uart2.active_txbuf];
-    
     if(length > UART_TXBUF_SIZE){
         return;
     }
-    while((DMA1_Channel4->CNDTR == 1) || ((uart2.bytestosend[uart2.active_txbuf] + length) > UART_TXBUF_SIZE)){
+    /*while((DMA1_Channel4->CNDTR == 1) || ((uart2.bytestosend[uart2.active_txbuf] + length) > UART_TXBUF_SIZE)){
         // block while the last byte is being transmitted to avoid transfer complete IRQ interrupting this function
         // or while active buffer is full
+    }*/
+    while(((uart2.bytestosend[uart2.active_txbuf] + length) > UART_TXBUF_SIZE))
+    {
+        // wait until space in buffer
     }
-    
-    memcpy(&txbuf[uart2.bytestosend[uart2.active_txbuf]], data, length);    // append data to current buffer at <bytestosend>
+    if(DMA1_Channel4->CNDTR == 1)   // if last transmission in progress wait to make sure 
+    {
+        NVIC_DisableIRQ(DMA1_Channel4_5_IRQn);
+        //__disable_irq();
+    }
+    memcpy(&uart2.txbuf[uart2.active_txbuf][uart2.bytestosend[uart2.active_txbuf]], data, length);    // append data to current buffer at <bytestosend>
     uart2.bytestosend[uart2.active_txbuf] += length;                        // increase bytestosend by data size
     
     // if no transmission active
     if(DMA1_Channel4->CNDTR == 0){
+        
         // set up DMA 
         DMA1_Channel4->CCR &= ~DMA_CCR_EN;
         DMA1->IFCR |= DMA_IFCR_CGIF4;
         DMA1_Channel4->CNDTR = uart2.bytestosend[uart2.active_txbuf];
         DMA1_Channel4->CPAR = (uint32_t)&USART2->TDR;
         DMA1_Channel4->CMAR = (uint32_t)uart2.txbuf[uart2.active_txbuf];
+        while(!(USART2->ISR & USART_ISR_TXE));  // wait for pending tx to complete!
         DMA1_Channel4->CCR |= DMA_CCR_EN;
         
         USART2->ICR |= USART_ICR_TCCF;
@@ -141,6 +187,7 @@ void uart2_tx_dma(const uint8_t *data, uint_fast16_t length)
         uart2.bytestosend[uart2.active_txbuf] = 0;
         uart2.active_txbuf ^= 1;        // swap active buffers
     }
+    NVIC_EnableIRQ(DMA1_Channel4_5_IRQn);
 }
 
 void DMA1_Channel4_5_IRQHandler(void)
@@ -153,6 +200,7 @@ void DMA1_Channel4_5_IRQHandler(void)
             DMA1_Channel4->CCR &= ~DMA_CCR_EN;                                  // disable channel 
             DMA1_Channel4->CMAR = (uint32_t)uart2.txbuf[uart2.active_txbuf];    // load new active buffer
             DMA1_Channel4->CNDTR = uart2.bytestosend[uart2.active_txbuf];       // load count
+            while(!(USART2->ISR & USART_ISR_TXE));  // wait for pending tx to complete!
             DMA1_Channel4->CCR |= DMA_CCR_EN;                                   // re-enable channel
             
             USART2->ICR |= USART_ICR_TCCF;

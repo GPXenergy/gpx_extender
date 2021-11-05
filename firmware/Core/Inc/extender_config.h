@@ -1,17 +1,10 @@
 #ifndef EXTENDER_CONFIG_H
 #define EXTENDER_CONFIG_H
 
+#include "stm32l0xx_hal.h"
+#include "uart.h"
 
-// UART
-#define UART_7B  ((uint32_t)USART_CR1_M1)  
-#define UART_8B  ((uint32_t)0x0)            
-#define UART_9B  ((uint32_t)USART_CR1_M0)
-
-enum{BAUDRATE = 115200u};         // uart baudrate
-#define UART_DATABITS UART_8B   // data bits (use only predefined values)
-#define UART_STOPBITS 1u        // only 1 or 2 stopbits supported
-#define UART_PARITY 1u
-enum{UART_RX_TIMEOUT = 2200u};  // (µs) timeout after which partial data is sent 
+enum{UART_RX_TIMEOUT = 2200u};          // (µs) timeout after which partial data is sent 
 
 // radio
 enum{RF_CHANNEL = 100u};        // RF channel, 100 chosen not to interfere with WiFi
@@ -21,11 +14,8 @@ enum{RF_POWER = 1u};            // RF transmit power
 enum{CRC8_POLY = 0x7};          // CRC polynomial
 enum{CRC_INITVALUE = 0xff};
 
-
-
-
 // application specific 
-#define VERSION_STR         "0.8"
+#define VERSION_STR         "0.9"
 enum{TXLOOP_TIMEOUT = 30000u, RXLOOP_TIMEOUT = (UINT16_MAX - 1)};
 enum{TX_MAX_WAITTIME = 200000};     // 
 enum{BTN_PRESS_DURATION = 300};     // time to hold button in 10ms increments
